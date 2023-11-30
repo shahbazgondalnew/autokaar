@@ -18,6 +18,7 @@ class SelectCarScreen extends StatefulWidget {
 
 class _SelectCarScreenState extends State<SelectCarScreen> {
   late List<CarModel> carModels = [];
+  //car company and model selected
   String? selectedCompany;
   String? selectedModel;
   late Future<String> uploadd;
