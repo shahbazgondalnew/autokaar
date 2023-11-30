@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "804072962663",
+    "firebase_url": "https://autokaar-d1104-default-rtdb.firebaseio.com",
+    "project_id": "autokaar-d1104",
+    "storage_bucket": "autokaar-d1104.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:804072962663:android:e643bdf55d1caed04d32c2",
+        "android_client_info": {
+          "package_name": "com.example.autocar_final"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "804072962663-778862qvjb6ltsk95i17714k0psru8dl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAM8GiCxBb5AtE9cDxf_LnBgzp7BYzsVSw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "804072962663-778862qvjb6ltsk95i17714k0psru8dl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:804072962663:android:92ef34ffa3839d3c4d32c2",
+        "android_client_info": {
+          "package_name": "com.example.autokaar_fypone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "804072962663-778862qvjb6ltsk95i17714k0psru8dl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAM8GiCxBb5AtE9cDxf_LnBgzp7BYzsVSw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "804072962663-778862qvjb6ltsk95i17714k0psru8dl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
