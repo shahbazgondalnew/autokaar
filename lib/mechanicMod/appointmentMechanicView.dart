@@ -101,6 +101,7 @@ class _AddGarageScreenState extends State<AddGarageScreenX> {
         ),
       ),
       appBar: AppBar(
+        //Garage addition
         title: Text('Add Garage'),
       ),
       body: SingleChildScrollView(
