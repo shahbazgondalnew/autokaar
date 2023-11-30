@@ -33,7 +33,7 @@ class _BlogDetailsScreenState extends State<BlogDetailsScreen> {
               child: CircularProgressIndicator(),
             );
           }
-
+//getting image link and title, text, time
           final blogData = snapshot.data!.data() as Map<String, dynamic>;
           final imageLink = blogData['imageLink'] ?? '';
           final title = blogData['title'] ?? '';
