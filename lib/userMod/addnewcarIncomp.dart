@@ -84,7 +84,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
                   print('Please select a company');
                 }
               },
-              child: Text('Add Car'),
+              child: Text('Add New Car'),
             ),
           ],
         ),
