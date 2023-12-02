@@ -92,7 +92,7 @@ class _CarLogScreenState extends State<CarLogScreen> {
                   inputFormatters: [_numberFormatter], // Apply the formatter
                   keyboardType: TextInputType.number, // Set the keyboard type to number
                   decoration: InputDecoration(
-                    labelText: 'Enter current meter Reading',
+                    labelText: 'Current meter Reading',
                     hintText: '12345',
                   ),
                 ),
@@ -252,7 +252,7 @@ class _CarLogScreenState extends State<CarLogScreen> {
             ),
             SizedBox(height: 10),
             Text(
-              'Car Run:',
+              'Total Car Run:',
               style: TextStyle(
                 fontSize: 18,
               ),
@@ -333,7 +333,7 @@ class _CarLogScreenState extends State<CarLogScreen> {
         'current': updatedValue,
       });
 
-      print('Document successfully updated with new value: $updatedValue');
+      print('File Updated Document successfully updated with new value: $updatedValue');
     } catch (error) {
       print('Error updating document: $error');
     }
