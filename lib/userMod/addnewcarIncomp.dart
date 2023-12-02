@@ -14,9 +14,9 @@ class _AddCarScreenState extends State<AddCarScreen> {
   String? selectedCompany;
 
   List<String> companies = [
-    'Company A',
-    'Company B',
-    'Company C',
+    'Honda',
+    'Toyota',
+    'Suzuki',
     // Add more company names as needed
   ];
 
