@@ -32,7 +32,6 @@ class _AddMechanicServiceScreenState extends State<AddMechanicServiceScreen> {
   Map<String, int?> serviceTimes = {};
   Map<String, TextEditingController> priceControllers = {};
 
-
   @override
   void initState() {
     super.initState();
@@ -42,7 +41,7 @@ class _AddMechanicServiceScreenState extends State<AddMechanicServiceScreen> {
 
   Future<void> fetchAllServices() async {
     QuerySnapshot snapshot =
-    await FirebaseFirestore.instance.collection('mechanicService').get();
+        await FirebaseFirestore.instance.collection('mechanicService').get();
     List<MechanicService> services = snapshot.docs.map((doc) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
@@ -71,17 +70,17 @@ class _AddMechanicServiceScreenState extends State<AddMechanicServiceScreen> {
 
       if (garageSnapshot.exists) {
         Map<String, dynamic>? data =
-        garageSnapshot.data() as Map<String, dynamic>?;
+            garageSnapshot.data() as Map<String, dynamic>?;
 
         if (data != null && data.containsKey('services')) {
           Map<String, dynamic> selectedServicesData =
-          Map<String, dynamic>.from(data['services'] as Map);
+              Map<String, dynamic>.from(data['services'] as Map);
           setState(() {
             selectedServices = selectedServicesData.keys.toList();
             servicePrices = selectedServicesData.map(
-                    (key, value) => MapEntry(key, value['servicePrice'] as int));
-            serviceTimes = selectedServicesData.map(
-                    (key, value) => MapEntry(key, value['timeTaken'] as int?));
+                (key, value) => MapEntry(key, value['servicePrice'] as int));
+            serviceTimes = selectedServicesData
+                .map((key, value) => MapEntry(key, value['timeTaken'] as int?));
           });
         }
       }
@@ -94,7 +93,7 @@ class _AddMechanicServiceScreenState extends State<AddMechanicServiceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Mechanic Services'),
+        title: Text('hell0'),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -155,7 +154,6 @@ class _AddMechanicServiceScreenState extends State<AddMechanicServiceScreen> {
                         width: 80,
                         child: TextFormField(
                           initialValue: serviceTime?.toString() ?? '',
-
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                             hintText: "Price(RS)",
@@ -169,7 +167,8 @@ class _AddMechanicServiceScreenState extends State<AddMechanicServiceScreen> {
                                 // Show a SnackBar with an error message.
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    content: Text('Value must be greater than 1'),
+                                    content:
+                                        Text('Value must be greater than 1'),
                                   ),
                                 );
                               }
@@ -177,8 +176,7 @@ class _AddMechanicServiceScreenState extends State<AddMechanicServiceScreen> {
                           },
                           controller: priceControllers[service.id],
                         ),
-                      )
-                      ,
+                      ),
                     ],
                   );
                 },

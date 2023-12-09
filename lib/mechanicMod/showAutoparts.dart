@@ -25,7 +25,6 @@ class Autopart {
     required this.image,
     required this.quantity,
     required this.inStock,
-
   });
 }
 
@@ -58,11 +57,10 @@ class _ShowAutoPartsState extends State<ShowAutoParts> {
 
     if (garageSnapshot.exists) {
       Map<String, dynamic>? data =
-      garageSnapshot.data() as Map<String, dynamic>?;
+          garageSnapshot.data() as Map<String, dynamic>?;
       if (data != null && data.containsKey('services')) {
         setState(() {
-          addedServices =
-          List<String>.from(data['services'] as List<dynamic>);
+          addedServices = List<String>.from(data['services'] as List<dynamic>);
         });
         await fetchServices();
       }
@@ -71,7 +69,7 @@ class _ShowAutoPartsState extends State<ShowAutoParts> {
 
   Future<void> fetchServices() async {
     QuerySnapshot snapshot =
-    await FirebaseFirestore.instance.collection('mechanicService').get();
+        await FirebaseFirestore.instance.collection('mechanicService').get();
     List<MechanicService> fetchedServices = snapshot.docs.map((doc) {
       return MechanicService(
         id: doc.id,
@@ -91,13 +89,14 @@ class _ShowAutoPartsState extends State<ShowAutoParts> {
         .get();
     List<Autopart> fetchedAutoparts = snapshot.docs.map((doc) {
       return Autopart(
-        name: doc.get('name'),
-        category: doc.get('category'),
-        subcategory: doc.get('subcategory'),
-        image: doc.get('image'),
-        quantity: doc.get('quantity'),
-        inStock: doc.get('inStock') as bool? ?? false,
-      );
+          name: doc.get('name'),
+          category: doc.get('category'),
+          subcategory: doc.get('subcategory'),
+          image: doc.get('image'),
+          quantity: doc.get('quantity'),
+          inStock: true
+          //inStock: doc.get('inStock') as bool? ?? false,
+          );
     }).toList();
 
     setState(() {
@@ -107,9 +106,10 @@ class _ShowAutoPartsState extends State<ShowAutoParts> {
 
   String getServiceName(String serviceId) {
     MechanicService? service =
-    services.firstWhereOrNull((service) => service.id == serviceId);
+        services.firstWhereOrNull((service) => service.id == serviceId);
     return service?.serviceName ?? '';
   }
+
   String getAvailabilityText(int quantity, bool inStock) {
     if (inStock && quantity > 0) {
       return 'In Stock';
@@ -144,108 +144,113 @@ class _ShowAutoPartsState extends State<ShowAutoParts> {
       ),
       body: addedAutoparts.isNotEmpty
           ? GridView.builder(
-        padding: EdgeInsets.all(16.0),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 16.0,
-          mainAxisSpacing: 16.0,
-          childAspectRatio: 0.75,
-        ),
-        itemCount: addedAutoparts.length,
-        itemBuilder: (context, index) {
-          Autopart autopart = addedAutoparts[index];
-          return Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  gradient: const LinearGradient(
-                    colors: [Colors.black, Colors.black],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              padding: EdgeInsets.all(16.0),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 16.0,
+                mainAxisSpacing: 16.0,
+                childAspectRatio: 0.75,
+              ),
+              itemCount: addedAutoparts.length,
+              itemBuilder: (context, index) {
+                Autopart autopart = addedAutoparts[index];
+                return Stack(
+                  alignment: Alignment.center,
                   children: [
-                    Expanded(
-                      child: ClipRRect(
+                    Container(
+                      decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        child: Image.network(
-                          autopart.image,
-                          fit: BoxFit.cover,
-                          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                            if (loadingProgress == null)
-                              return child;
-                            return Center(
-                              child: CircularProgressIndicator(
-                                value: loadingProgress.expectedTotalBytes != null
-                                    ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                                    : null,
-                              ),
-                            );
-                          },
-                          errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                            return Icon(
-                              Icons.error_outline,
-                              color: Colors.white,
-                            );
-                          },
+                        gradient: const LinearGradient(
+                          colors: [Colors.black, Colors.black],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                         ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.network(
+                                autopart.image,
+                                fit: BoxFit.cover,
+                                loadingBuilder: (BuildContext context,
+                                    Widget child,
+                                    ImageChunkEvent? loadingProgress) {
+                                  if (loadingProgress == null) return child;
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      value:
+                                          loadingProgress.expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
+                                              : null,
+                                    ),
+                                  );
+                                },
+                                errorBuilder: (BuildContext context,
+                                    Object exception, StackTrace? stackTrace) {
+                                  return Icon(
+                                    Icons.error_outline,
+                                    color: Colors.white,
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 8.0),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Text(
+                              autopart.name,
+                              style: TextStyle(color: Colors.white),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          SizedBox(height: 4.0),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Text(
+                              '${autopart.quantity} available',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(height: 8.0),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    if (addedAutoparts[index].image.isEmpty)
+                      CircularProgressIndicator(),
+                    Positioned(
+                      bottom: 8.0,
+                      left: 8.0,
                       child: Text(
-                        autopart.name,
-                        style: TextStyle(color: Colors.white),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    SizedBox(height: 4.0),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(
-                        '${autopart.quantity} available',
+                        getAvailabilityText(
+                            autopart.quantity, autopart.inStock),
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
                   ],
-                ),
-              ),
-              if (addedAutoparts[index].image.isEmpty)
-                CircularProgressIndicator(),
-              Positioned(
-                bottom: 8.0,
-                left: 8.0,
-                child: Text(
-                  getAvailabilityText(autopart.quantity, autopart.inStock),
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
-          );
-        },
-      )
-
+                );
+              },
+            )
           : Center(
-        child: Text('No autoparts added'),
-      ),
+              child: Text('No autoparts added'),
+            ),
     );
   }
 }
-
-
-
-
