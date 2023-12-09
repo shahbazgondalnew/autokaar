@@ -20,6 +20,7 @@ class _AddAutopartScreenState extends State<AddAutopartScreen> {
   bool _isLoading = false;
   List<Autopart> _autopartSuggestions = [];
   final _nameController = TextEditingController();
+  final _priceController = TextEditingController();
 
   List<String> _categories = [];
   Map<String, List<String>> _subcategories = {};
@@ -155,6 +156,22 @@ class _AddAutopartScreenState extends State<AddAutopartScreen> {
                     return null;
                   },
                 ),
+                TextFormField(
+                  controller:
+                      _priceController, // Add a TextEditingController for the price
+                  decoration: InputDecoration(labelText: 'Price'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter the price';
+                    }
+                    final double price = double.tryParse(value) ?? 0.0;
+                    if (price < 0) {
+                      return 'Price cannot be negative';
+                    }
+                    return null;
+                  },
+                ),
                 SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: _isLoading ? null : _submitForm,
@@ -213,6 +230,7 @@ class _AddAutopartScreenState extends State<AddAutopartScreen> {
     final category = _selectedCategory!;
     final subcategory = _selectedSubcategory!;
     final quantity = int.parse(_quantityController.text);
+    final priceOfpart = int.parse(_quantityController.text);
 
     setState(() {
       _isLoading = true;
@@ -236,7 +254,8 @@ class _AddAutopartScreenState extends State<AddAutopartScreen> {
         'subcategory': subcategory,
         'image': downloadURL,
         'quantity': quantity,
-        'inStock': _inStock
+        'inStock': _inStock,
+        'price': priceOfpart
       };
 
       // Add autopart to Firestore

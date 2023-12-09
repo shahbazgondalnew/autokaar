@@ -17,15 +17,16 @@ class Autopart {
   final String image;
   final int quantity;
   final bool inStock;
+  int price;
 
-  Autopart({
-    required this.name,
-    required this.category,
-    required this.subcategory,
-    required this.image,
-    required this.quantity,
-    required this.inStock,
-  });
+  Autopart(
+      {required this.name,
+      required this.category,
+      required this.subcategory,
+      required this.image,
+      required this.quantity,
+      required this.inStock,
+      required this.price});
 }
 
 class ShowAutoPartsUser extends StatefulWidget {
@@ -85,13 +86,13 @@ class _ShowAutoPartsUserState extends State<ShowAutoPartsUser> {
         .get();
     List<Autopart> fetchedAutoparts = snapshot.docs.map((doc) {
       return Autopart(
-        name: doc.get('name'),
-        category: doc.get('category'),
-        subcategory: doc.get('subcategory'),
-        image: doc.get('image'),
-        quantity: doc.get('quantity'),
-        inStock: doc.get('inStock') as bool? ?? false,
-      );
+          name: doc.get('name'),
+          category: doc.get('category'),
+          subcategory: doc.get('subcategory'),
+          image: doc.get('image'),
+          quantity: doc.get('quantity'),
+          inStock: doc.get('inStock') as bool? ?? false,
+          price: doc.get('price'));
     }).toList();
 
     setState(() {
@@ -175,7 +176,7 @@ class _ShowAutoPartsUserState extends State<ShowAutoPartsUser> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Text(
-                          '${autopart.quantity} available',
+                          '${autopart.price} RS',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
