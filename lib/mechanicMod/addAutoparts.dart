@@ -9,6 +9,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddAutopartScreen extends StatefulWidget {
+  final String garageId;
+  AddAutopartScreen({super.key, required this.garageId});
+
   @override
   _AddAutopartScreenState createState() => _AddAutopartScreenState();
 }
@@ -174,9 +177,12 @@ class _AddAutopartScreenState extends State<AddAutopartScreen> {
                 ),
                 SizedBox(height: 16.0),
                 ElevatedButton(
-                  onPressed: _isLoading ? null : _submitForm,
-                  child:
-                      _isLoading ? CircularProgressIndicator() : Text('Submit'),
+                  onPressed: () async {
+                    await _submitForm(widget.garageId);
+                  },
+                  child: _isLoading
+                      ? const CircularProgressIndicator()
+                      : Text('Submit'),
                 ),
               ],
             ),
@@ -221,7 +227,7 @@ class _AddAutopartScreenState extends State<AddAutopartScreen> {
     }
   }
 
-  Future<void> _submitForm() async {
+  Future<void> _submitForm(String garageID) async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -255,7 +261,8 @@ class _AddAutopartScreenState extends State<AddAutopartScreen> {
         'image': downloadURL,
         'quantity': quantity,
         'inStock': _inStock,
-        'price': priceOfpart
+        'price': priceOfpart,
+        'garageID': garageID
       };
 
       // Add autopart to Firestore

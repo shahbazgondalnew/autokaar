@@ -18,8 +18,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../commonMOd/under_construction.dart';
 
-
-
 class MechanicMainScreen extends StatefulWidget {
   const MechanicMainScreen({Key? key}) : super(key: key);
 
@@ -40,7 +38,6 @@ class _MainScreenState extends State<MechanicMainScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     String selectedMode = "Vehicle Owner";
     final User? user = _auth.currentUser;
     final String userId = user?.uid ?? '';
@@ -84,13 +81,15 @@ class _MainScreenState extends State<MechanicMainScreen> {
                   },
                   icon: GestureDetector(
                     onTap: () async {
-
-                      List<String> garageIds = await findGarageIdsForUser(userId );
+                      List<String> garageIds =
+                          await findGarageIdsForUser(userId);
                       // Define the action to be performed when the chat icon is tapped
                       // For example, navigate to the chat screen
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => MechanicChatScreen(garageIds:garageIds )),
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                MechanicChatScreen(garageIds: garageIds)),
                       );
                     },
                     child: Stack(
@@ -122,7 +121,6 @@ class _MainScreenState extends State<MechanicMainScreen> {
                       ],
                     ),
                   ),
-
                 ),
               ],
             ),
@@ -220,13 +218,11 @@ class _MainScreenState extends State<MechanicMainScreen> {
                           );
                         }
                         if (index == 0) {
-                          String currentUSERTHAT=getCurrentUserUid();
+                          String currentUSERTHAT = getCurrentUserUid();
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                MyGaragesScreen(userId: currentUSERTHAT,)
-                            ),
+                                builder: (context) => MyGaragesScreen()),
                           );
                         }
                         if (index == 3) {
@@ -253,11 +249,12 @@ class _MainScreenState extends State<MechanicMainScreen> {
                           );
                         }
                         if (index == 2) {
-                          String currentUSERTHAT=getCurrentUserUid();
+                          String currentUSERTHAT = getCurrentUserUid();
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => SelectGarage(userId: currentUSERTHAT)),
+                                builder: (context) =>
+                                    SelectGarage(userId: currentUSERTHAT)),
                           );
                         }
                       },
@@ -387,7 +384,6 @@ class _MainScreenState extends State<MechanicMainScreen> {
                                       ),
                                       SizedBox(height: 5),
                                       SizedBox(height: 10),
-
                                     ],
                                   ),
                                 ),
@@ -412,6 +408,7 @@ class _MainScreenState extends State<MechanicMainScreen> {
       throw Exception("User is not logged in.");
     }
   }
+
   Future<List<String>> findGarageIdsForUser(String userId) async {
     List<String> garageIds = [];
 
@@ -427,7 +424,6 @@ class _MainScreenState extends State<MechanicMainScreen> {
 
     return garageIds;
   }
-
 }
 
 class Option {
@@ -435,4 +431,109 @@ class Option {
   final IconData icon;
 
   Option(this.name, this.icon);
+}
+
+////
+
+class MyGaragesScreen extends StatelessWidget {
+  String getCurrentUserUid() {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      return user.uid;
+    } else {
+      // Handle the case when the user is not logged in
+      throw Exception("User is not logged in.");
+    }
+  }
+
+  MyGaragesScreen();
+
+  @override
+  Widget build(BuildContext context) {
+    String userId = getCurrentUserUid();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Select Garage'),
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('mechanicGarage')
+            .where('userID', isEqualTo: userId)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          if (snapshot.hasError) {
+            return Center(
+              child: Text('Error loading data. Please try again later.'),
+            );
+          }
+
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return Center(
+              child: Text('You have not added any garages yet.'),
+            );
+          }
+
+          final garageDocs = snapshot.data!.docs;
+
+          return ListView.builder(
+            itemCount: garageDocs.length,
+            itemBuilder: (context, index) {
+              final garageData =
+                  garageDocs[index].data() as Map<String, dynamic>;
+              final garageName = garageData['garageName'] as String;
+              final garageId = garageDocs[index].id;
+
+              return GestureDetector(
+                onTap: () {
+                  // Navigate to AppointmentListScreen with the selected garage's ID
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          AppointmentListScreen(garageId: garageId),
+                    ),
+                  );
+                },
+                child: Container(
+                  margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: ListTile(
+                    title: Text(
+                      garageName,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18.0,
+                        color: Colors.white, // Text color
+                      ),
+                    ),
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.white, // Icon color
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
 }

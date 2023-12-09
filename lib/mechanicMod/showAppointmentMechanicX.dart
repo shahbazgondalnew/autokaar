@@ -20,13 +20,12 @@ class AppointmentListScreen extends StatelessWidget {
 
 class AppointmentList extends StatelessWidget {
   final String garageId;
-  String userName="loading";
+  String userName = "loading";
 
   AppointmentList({required this.garageId});
 
   @override
   Widget build(BuildContext context) {
-
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('Bookedappointments')
@@ -57,7 +56,8 @@ class AppointmentList extends StatelessWidget {
         return ListView.builder(
           itemCount: appointments.length,
           itemBuilder: (context, index) {
-            final appointment = appointments[index].data() as Map<String, dynamic>;
+            final appointment =
+                appointments[index].data() as Map<String, dynamic>;
 
             // Wrap the ListTile with GestureDetector
             return GestureDetector(
@@ -68,7 +68,10 @@ class AppointmentList extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PerformAppointment(appointmentData: appointment, garageId:  garageId,),
+                    builder: (context) => PerformAppointment(
+                      appointmentData: appointment,
+                      garageId: garageId,
+                    ),
                   ),
                 );
               },
@@ -89,7 +92,8 @@ class AppointmentList extends StatelessWidget {
                 child: ListTile(
                   title: FutureBuilder<String>(
                     future: fetchUserName(appointment['userUid']),
-                    builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                    builder:
+                        (BuildContext context, AsyncSnapshot<String> snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Text(
                           'Loading...',
@@ -120,135 +124,35 @@ class AppointmentList extends StatelessWidget {
                         ),
                       );
                     },
-                  )
-                  ,
+                  ),
                   subtitle: Text(
                     'Start Time: ${appointment['startTime']}',
                     style: TextStyle(fontSize: 16.0),
-                  )
-                  ,
+                  ),
                   trailing: Icon(Icons.arrow_forward_ios),
                 ),
               ),
             );
-
           },
         );
       },
     );
   }
+
   Future<String> fetchUserName(String userId) async {
     // Fetch user name from the 'Users' collection
-    final DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(userId)
-        .get();
+    final DocumentSnapshot userSnapshot =
+        await FirebaseFirestore.instance.collection('Users').doc(userId).get();
 
     if (!userSnapshot.exists) {
       return "User"; // Return a default value in case user data doesn't exist
     }
 
-    final Map<String, dynamic> userData = userSnapshot.data()
-    as Map<String, dynamic>;
+    final Map<String, dynamic> userData =
+        userSnapshot.data() as Map<String, dynamic>;
 
     final String userName = userData['name'] ?? '';
 
     return userName;
   }
-}
-
-
-class MyGaragesScreen extends StatelessWidget {
-  final String userId;
-
-  MyGaragesScreen({required this.userId});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Select Garage'),
-      ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('mechanicGarage')
-            .where('userID', isEqualTo: userId)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          if (snapshot.hasError) {
-            return Center(
-              child: Text('Error loading data. Please try again later.'),
-            );
-          }
-
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(
-              child: Text('You have not added any garages yet.'),
-            );
-          }
-
-          final garageDocs = snapshot.data!.docs;
-
-          return ListView.builder(
-            itemCount: garageDocs.length,
-            itemBuilder: (context, index) {
-              final garageData = garageDocs[index].data() as Map<String, dynamic>;
-              final garageName = garageData['garageName'] as String;
-              final garageId = garageDocs[index].id;
-
-              return GestureDetector(
-                onTap: () {
-                  // Navigate to AppointmentListScreen with the selected garage's ID
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AppointmentListScreen(garageId: garageId),
-                    ),
-                  );
-                },
-                child: Container(
-                  margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: ListTile(
-                    title: Text(
-                      garageName,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18.0,
-                        color: Colors.white, // Text color
-                      ),
-                    ),
-                    trailing: Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.white, // Icon color
-                    ),
-                  ),
-                ),
-              );
-
-            },
-          );
-        },
-      ),
-    );
-  }
-
-
 }

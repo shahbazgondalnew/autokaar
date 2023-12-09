@@ -1,4 +1,5 @@
 import 'package:autokaar/mechanicMod/addAutoparts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
@@ -67,6 +68,16 @@ class _ShowAutoPartsState extends State<ShowAutoParts> {
     }
   }
 
+  String getCurrentUserUid() {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      return user.uid;
+    } else {
+      // Handle the case when the user is not logged in
+      throw Exception("User is not logged in.");
+    }
+  }
+
   Future<void> fetchServices() async {
     QuerySnapshot snapshot =
         await FirebaseFirestore.instance.collection('mechanicService').get();
@@ -122,10 +133,13 @@ class _ShowAutoPartsState extends State<ShowAutoParts> {
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
+          String currentMechanicUID = getCurrentUserUid();
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AddAutopartScreen(),
+              builder: (context) => MyGaragesScreen(
+                userId: currentMechanicUID,
+              ),
             ),
           );
         },
@@ -219,6 +233,100 @@ class _ShowAutoPartsState extends State<ShowAutoParts> {
           : Center(
               child: Text('No autoparts added'),
             ),
+    );
+  }
+}
+
+////////////
+//select garage
+class MyGaragesScreen extends StatelessWidget {
+  final String userId;
+
+  MyGaragesScreen({required this.userId});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Select Garage'),
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('mechanicGarage')
+            .where('userID', isEqualTo: userId)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          if (snapshot.hasError) {
+            return Center(
+              child: Text('Error loading data. Please try again later.'),
+            );
+          }
+
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return Center(
+              child: Text('You have not added any garages yet.'),
+            );
+          }
+
+          final garageDocs = snapshot.data!.docs;
+
+          return ListView.builder(
+            itemCount: garageDocs.length,
+            itemBuilder: (context, index) {
+              final garageData =
+                  garageDocs[index].data() as Map<String, dynamic>;
+              final garageName = garageData['garageName'] as String;
+              final garageId = garageDocs[index].id;
+
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            AddAutopartScreen(garageId: garageId)),
+                  );
+                },
+                child: Container(
+                  margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: ListTile(
+                    title: Text(
+                      garageName,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18.0,
+                        color: Colors.white, // Text color
+                      ),
+                    ),
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.white, // Icon color
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
