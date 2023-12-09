@@ -28,16 +28,14 @@ class Autopart {
   });
 }
 
-class ShowAutoParts extends StatefulWidget {
-  final String garageId;
-
-  ShowAutoParts({required this.garageId});
+class ShowAutoPartsUser extends StatefulWidget {
+  ShowAutoPartsUser();
 
   @override
-  _ShowAutoPartsState createState() => _ShowAutoPartsState();
+  _ShowAutoPartsUserState createState() => _ShowAutoPartsUserState();
 }
 
-class _ShowAutoPartsState extends State<ShowAutoParts> {
+class _ShowAutoPartsUserState extends State<ShowAutoPartsUser> {
   List<String> addedServices = [];
   List<MechanicService> services = [];
   List<Autopart> addedAutoparts = [];
@@ -50,10 +48,8 @@ class _ShowAutoPartsState extends State<ShowAutoParts> {
   }
 
   Future<void> fetchAddedServices() async {
-    DocumentSnapshot garageSnapshot = await FirebaseFirestore.instance
-        .collection('addedService')
-        .doc(widget.garageId)
-        .get();
+    DocumentSnapshot garageSnapshot =
+        await FirebaseFirestore.instance.collection('addedService').doc().get();
 
     if (garageSnapshot.exists) {
       Map<String, dynamic>? data =
@@ -120,24 +116,6 @@ class _ShowAutoPartsState extends State<ShowAutoParts> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddAutopartScreen(),
-            ),
-          );
-        },
-        icon: Icon(
-          Icons.directions_car,
-          color: Colors.black,
-        ),
-        label: Text('Add AutoParts'),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
-        ),
-      ),
       appBar: AppBar(
         title: Text('AutoParts'),
       ),

@@ -12,6 +12,7 @@ class AddAutopartScreen extends StatefulWidget {
   @override
   _AddAutopartScreenState createState() => _AddAutopartScreenState();
 }
+
 class _AddAutopartScreenState extends State<AddAutopartScreen> {
   final _formKey = GlobalKey<FormState>();
   final _quantityController = TextEditingController();
@@ -39,30 +40,37 @@ class _AddAutopartScreenState extends State<AddAutopartScreen> {
 
   Future<List<String>> getDistinctCategories() async {
     QuerySnapshot snapshot =
-    await FirebaseFirestore.instance.collection('addedparts').get();
+        await FirebaseFirestore.instance.collection('partcate').get();
     Set<String> categories = Set<String>();
     for (QueryDocumentSnapshot doc in snapshot.docs) {
-      String category = doc['category'] as String;
+      String category = doc['cat'] as String;
       categories.add(category);
     }
     return categories.toList();
   }
 
   Future<void> fetchDistinctSubcategories(String category) async {
-    _subcategories[category] = await getDistinctSubcategoriesForCategory(category);
+    _subcategories[category] =
+        await getDistinctSubcategoriesForCategory(category);
+    print("sub");
+    print(_subcategories);
+    print("sub");
     setState(() {});
   }
 
-  Future<List<String>> getDistinctSubcategoriesForCategory(String category) async {
+  Future<List<String>> getDistinctSubcategoriesForCategory(
+      String category) async {
     QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection('addedparts')
-        .where('category', isEqualTo: category)
+        .collection('partcate')
+        .where('cat', isEqualTo: category)
         .get();
     Set<String> subcategories = Set<String>();
     for (QueryDocumentSnapshot doc in snapshot.docs) {
-      String subcategory = doc['subcategory'] as String;
+      String subcategory = doc['subcat'] as String;
       subcategories.add(subcategory);
     }
+    print(category);
+    print(subcategories);
     return subcategories.toList();
   }
 
@@ -70,7 +78,7 @@ class _AddAutopartScreenState extends State<AddAutopartScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Autopart'),
+        title: Text('tesssst'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -95,7 +103,10 @@ class _AddAutopartScreenState extends State<AddAutopartScreen> {
                     setState(() {
                       _selectedCategory = value;
                       _selectedSubcategory = null;
-                      fetchDistinctSubcategories(value!);
+                      print(value);
+                      if (value != null) {
+                        fetchDistinctSubcategories(value);
+                      }
                     });
                   },
                   hint: Text('Select Category'),
@@ -103,13 +114,14 @@ class _AddAutopartScreenState extends State<AddAutopartScreen> {
                 ),
                 DropdownButton<String>(
                   value: _selectedSubcategory,
-                  items: _selectedCategory != null
+                  items: _selectedCategory != null &&
+                          _subcategories[_selectedCategory] != null
                       ? _subcategories[_selectedCategory]!.map((subcategory) {
-                    return DropdownMenuItem<String>(
-                      value: subcategory,
-                      child: Text(subcategory),
-                    );
-                  }).toList()
+                          return DropdownMenuItem<String>(
+                            value: subcategory,
+                            child: Text(subcategory),
+                          );
+                        }).toList()
                       : null,
                   onChanged: (value) {
                     setState(() {
@@ -146,7 +158,8 @@ class _AddAutopartScreenState extends State<AddAutopartScreen> {
                 SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: _isLoading ? null : _submitForm,
-                  child: _isLoading ? CircularProgressIndicator() : Text('Submit'),
+                  child:
+                      _isLoading ? CircularProgressIndicator() : Text('Submit'),
                 ),
               ],
             ),
@@ -171,7 +184,9 @@ class _AddAutopartScreenState extends State<AddAutopartScreen> {
               color: Colors.grey[200],
               borderRadius: BorderRadius.circular(8.0),
             ),
-            child: _image == null ? Icon(Icons.camera_alt, size: 48.0) : Image.file(_image!, fit: BoxFit.cover),
+            child: _image == null
+                ? Icon(Icons.camera_alt, size: 48.0)
+                : Image.file(_image!, fit: BoxFit.cover),
           ),
         ),
       ],
@@ -206,9 +221,10 @@ class _AddAutopartScreenState extends State<AddAutopartScreen> {
     try {
       // Initialize Firebase
 
-
       // Upload image to Firebase Storage
-      final storageRef = FirebaseStorage.instance.ref().child('partImages/${DateTime.now().millisecondsSinceEpoch}.jpg');
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('partImages/${DateTime.now().millisecondsSinceEpoch}.jpg');
       final uploadTask = storageRef.putFile(_image!);
       final uploadSnapshot = await uploadTask.whenComplete(() => null);
       final downloadURL = await uploadSnapshot.ref.getDownloadURL();

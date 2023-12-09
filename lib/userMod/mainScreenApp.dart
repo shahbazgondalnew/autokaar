@@ -3,6 +3,7 @@ import 'package:autokaar/commonMod/userProfileScreen.dart';
 import 'package:autokaar/userMod/bookedService.dart';
 import 'package:autokaar/userMod/carListscreen.dart';
 import 'package:autokaar/userMod/showNearbyMechanic.dart';
+import 'package:autokaar/userMod/showPartUser.dart';
 import 'package:autokaar/userMod/userChat.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -73,7 +74,7 @@ class _MainScreenState extends State<MainScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => UserChatScreen(userId:userId)),
+                      builder: (context) => UserChatScreen(userId: userId)),
                 );
               },
               icon: Stack(
@@ -213,7 +214,7 @@ class _MainScreenState extends State<MainScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => UnderConstructionScreen(),
+                            builder: (context) => ShowAutoPartsUser(),
                           ),
                         );
                       }
@@ -224,7 +225,6 @@ class _MainScreenState extends State<MainScreen> {
                             builder: (context) => UnderConstructionScreen(),
                           ),
                         );
-
                       }
                       if (index == 4) {
                         Navigator.push(
@@ -292,9 +292,9 @@ class _MainScreenState extends State<MainScreen> {
                   }
 
                   carDocuments = snapshot.data!.docs;
-                 // if (!showAllCars && carDocuments.length > 2) {
-                   // carDocuments = carDocuments.sublist(0, 2);
-                 // }
+                  // if (!showAllCars && carDocuments.length > 2) {
+                  // carDocuments = carDocuments.sublist(0, 2);
+                  // }
 
                   return Column(
                     children: [
@@ -400,7 +400,6 @@ class _MainScreenState extends State<MainScreen> {
                           },
                         ),
                       ),
-
                     ],
                   );
                 },
