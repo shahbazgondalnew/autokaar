@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:autokaar/userMod/car_model.dart';
 
 class AddAutopartScreen extends StatefulWidget {
   final String garageId;
@@ -17,6 +18,7 @@ class AddAutopartScreen extends StatefulWidget {
 }
 
 class _AddAutopartScreenState extends State<AddAutopartScreen> {
+  late List<CarModel> carModels = [];
   final _formKey = GlobalKey<FormState>();
   final _quantityController = TextEditingController();
   File? _image;
@@ -24,17 +26,43 @@ class _AddAutopartScreenState extends State<AddAutopartScreen> {
   List<Autopart> _autopartSuggestions = [];
   final _nameController = TextEditingController();
   final _priceController = TextEditingController();
+  final _averageLifeController = TextEditingController();
 
   List<String> _categories = [];
   Map<String, List<String>> _subcategories = {};
   String? _selectedCategory;
   String? _selectedSubcategory;
   bool _inStock = false;
+  String selectedModelLOcal = "";
+  String selectedCompanyLocal = "";
+
+  ///
+  ///
+  String? selectedCompany;
+  String? selectedModel;
 
   @override
   void initState() {
     super.initState();
     fetchDistinctCategories();
+    fetchCarModels();
+  }
+
+  Future<void> fetchCarModels() async {
+    QuerySnapshot snapshot =
+        await FirebaseFirestore.instance.collection('carsModels').get();
+    List<CarModel> models = snapshot.docs.map((doc) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      return CarModel(
+        id: doc.id,
+        companyName: data['companyName'],
+        modelName: data['modelName'],
+      );
+    }).toList();
+
+    setState(() {
+      carModels = models;
+    });
   }
 
   Future<void> fetchDistinctCategories() async {
@@ -78,8 +106,22 @@ class _AddAutopartScreenState extends State<AddAutopartScreen> {
     return subcategories.toList();
   }
 
+  List<String> getDistinctCompanies() {
+    return carModels.map((model) => model.companyName).toSet().toList();
+  }
+
+  List<String> getModelsForCompany(String company) {
+    return carModels
+        .where((model) => model.companyName == company)
+        .map((model) => model.modelName)
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
+    List<String> companies = getDistinctCompanies();
+    List<String> models =
+        selectedCompany != null ? getModelsForCompany(selectedCompany!) : [];
     return Scaffold(
       appBar: AppBar(
         title: Text('tesssst'),
@@ -175,6 +217,59 @@ class _AddAutopartScreenState extends State<AddAutopartScreen> {
                     return null;
                   },
                 ),
+                TextFormField(
+                  controller:
+                      _averageLifeController, // Add a TextEditingController for the average life
+                  decoration:
+                      InputDecoration(labelText: 'Average Life (in Kilometer)'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter the average life';
+                    }
+                    final double averageLife = double.tryParse(value) ?? 0.0;
+                    if (averageLife <= 0) {
+                      return 'Average Life must be greater than 0';
+                    }
+                    return null;
+                  },
+                ),
+                DropdownButton<String>(
+                  value: selectedCompany,
+                  hint: Text('Select Company'),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedCompany = value;
+                      selectedCompanyLocal = selectedCompany!;
+                      selectedModel =
+                          null; // Reset selected model when company changes
+                    });
+                  },
+                  items: companies.map((company) {
+                    return DropdownMenuItem<String>(
+                      value: company,
+                      child: Text(company),
+                    );
+                  }).toList(),
+                ),
+                SizedBox(height: 16.0),
+                DropdownButton<String>(
+                  value: selectedModel,
+                  hint: Text('Select Model'),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedModel = value;
+                      selectedModelLOcal = value.toString();
+                    });
+                  },
+                  items: models.map((model) {
+                    return DropdownMenuItem<String>(
+                      value: model,
+                      child: Text(model),
+                    );
+                  }).toList(),
+                ),
+                SizedBox(height: 16),
                 SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () async {
@@ -237,6 +332,7 @@ class _AddAutopartScreenState extends State<AddAutopartScreen> {
     final subcategory = _selectedSubcategory!;
     final quantity = int.parse(_quantityController.text);
     final priceOfpart = int.parse(_quantityController.text);
+    final averageLife = int.parse(_averageLifeController.text);
 
     setState(() {
       _isLoading = true;
@@ -262,7 +358,8 @@ class _AddAutopartScreenState extends State<AddAutopartScreen> {
         'quantity': quantity,
         'inStock': _inStock,
         'price': priceOfpart,
-        'garageID': garageID
+        'garageID': garageID,
+        'averageLife': averageLife
       };
 
       // Add autopart to Firestore
