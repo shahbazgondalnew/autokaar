@@ -50,6 +50,7 @@ dependencies:
   flutter_local_notifications: ^15.1.0+1
   autocomplete_textfield: ^2.0.1
   permission_handler: ^10.4.3
+  maps_launcher: ^2.2.0
 
 dev_dependencies:
   flutter_test:
