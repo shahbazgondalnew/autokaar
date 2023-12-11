@@ -235,10 +235,13 @@ class _ShowAutoPartsState extends State<ShowAutoParts> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Text(
-                          autopart.name,
+                          autopart.name.length > 20
+                              ? autopart.name.substring(0, 20)
+                              : autopart.name,
                           style: TextStyle(color: Colors.white),
-                          maxLines: 2,
+                          maxLines: 1,
                           overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.start,
                         ),
                       ),
                       SizedBox(height: 1.0),

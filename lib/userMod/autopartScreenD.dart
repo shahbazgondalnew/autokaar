@@ -80,91 +80,147 @@ class _AutopartDetailsScreenState extends State<AutopartDetailsScreen> {
       appBar: AppBar(
         title: Text('Autopart Details'),
       ),
-      body: SingleChildScrollView(
+      body: Container(
+        color: Colors.black,
         padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Name: ${widget.autopart.name}',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8.0),
-            Image.network(
-              widget.autopart.image,
-              fit: BoxFit.cover,
-              height: 200.0,
-            ),
-            SizedBox(height: 16.0),
-            Text(
-              'Category: ${widget.autopart.category}',
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 8.0),
-            Text(
-              'Subcategory: ${widget.autopart.subcategory}',
-              style: TextStyle(fontSize: 16),
-            ),
-            // ... (other details)
-            // ... (other details)
-            SizedBox(height: 8.0),
-            Text(
-              'Quantity: ${widget.autopart.quantity}',
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 8.0),
-            Text(
-              'Price: ${widget.autopart.price} RS',
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 8.0),
-
-            Text(
-              'Garage: $garageName',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-
-            Container(
-              height: 200, // adjust the height as needed
-              child: GoogleMap(
-                onMapCreated: (controller) {
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Name: ${widget.autopart.name}',
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+              ),
+              SizedBox(height: 16.0),
+              Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15.0),
+                  child: Image.network(
+                    widget.autopart.image,
+                    fit: BoxFit.cover,
+                    height: 200.0,
+                  ),
+                ),
+              ),
+              SizedBox(height: 16.0),
+              ListView(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                children: [
+                  ListTile(
+                    leading: Icon(Icons.category, color: Colors.white),
+                    title: Text(
+                      'Category: ${widget.autopart.category}',
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.subdirectory_arrow_right,
+                        color: Colors.white),
+                    title: Text(
+                      'Subcategory: ${widget.autopart.subcategory}',
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.add_shopping_cart, color: Colors.white),
+                    title: Text(
+                      'Quantity: ${widget.autopart.quantity}',
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.monetization_on, color: Colors.white),
+                    title: Text(
+                      'Price: ${widget.autopart.price} RS',
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.location_on, color: Colors.white),
+                    title: Text(
+                      'Garage: $garageName',
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16.0),
+              Container(
+                height: 200, // adjust the height as needed
+                child: GoogleMap(
+                  onMapCreated: (controller) {
+                    setState(() {
+                      mapController = controller;
+                    });
+                  },
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(
+                        latitude, longitude), // use the actual lat and long
+                    zoom: 15.0,
+                  ),
+                  markers: {
+                    Marker(
+                      markerId: MarkerId('garageLocation'),
+                      position: LatLng(latitude, longitude),
+                      infoWindow: InfoWindow(title: garageName),
+                    ),
+                  },
+                ),
+              ),
+              QuantitySelector(
+                initialQuantity: quantity,
+                onChanged: (newQuantity) {
                   setState(() {
-                    mapController = controller;
+                    quantity = newQuantity;
                   });
                 },
-                initialCameraPosition: CameraPosition(
-                  target: LatLng(
-                      latitude, longitude), // use the actual lat and long
-                  zoom: 15.0,
-                ),
-                markers: {
-                  Marker(
-                    markerId: MarkerId('garageLocation'),
-                    position: LatLng(latitude, longitude),
-                    infoWindow: InfoWindow(title: garageName),
-                  ),
-                },
               ),
-            ),
-            QuantitySelector(
-              initialQuantity: quantity,
-              onChanged: (newQuantity) {
-                setState(() {
-                  quantity = newQuantity;
-                });
-              },
-            ),
-            ElevatedButton(
-              onPressed: _openGoogleMapsDirections,
-              child: Text('Get Directions'),
-            )
-          ],
+              SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: _openGoogleMapsDirections,
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.yellow,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0)),
+                  padding: EdgeInsets.all(16.0),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.location_on, size: 24.0, color: Colors.black),
+                    SizedBox(width: 8.0),
+                    Text(
+                      'Get Directions',
+                      style: TextStyle(fontSize: 16.0, color: Colors.black),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomAppBar(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Colors.green, // Change the background color to green
+              onPrimary: Colors.white, // Button text color
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: EdgeInsets.symmetric(vertical: 12),
+              elevation: 5, // Button elevation
+              minimumSize: Size(double.infinity, 0), // Full width
+            ),
             onPressed: _placeOrder,
             child: Text('Place Order'),
           ),
