@@ -13,20 +13,37 @@ class MechanicService {
 
 class Autopart {
   final String name;
+  final String garageID;
   final String category;
   final String subcategory;
   final String image;
   final int quantity;
+  final int price;
+  final int averageLife;
   final bool inStock;
+
+  final List<SuitableCar> suitableCars; // Add this field
 
   Autopart({
     required this.name,
+    required this.garageID,
     required this.category,
     required this.subcategory,
     required this.image,
     required this.quantity,
     required this.inStock,
+    required this.averageLife,
+    required this.suitableCars,
+    required this.price, // Add this field
   });
+}
+
+// Add SuitableCar class
+class SuitableCar {
+  final String companyName;
+  final String modelName;
+
+  SuitableCar({required this.companyName, required this.modelName});
 }
 
 class ShowAutoParts extends StatefulWidget {
@@ -93,12 +110,24 @@ class _ShowAutoPartsState extends State<ShowAutoParts> {
     });
   }
 
+// Update fetchAddedAutoparts method
   Future<void> fetchAddedAutoparts() async {
     QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection('addedparts')
+        .collection('addedpartsall')
         .orderBy('name')
         .get();
-    List<Autopart> fetchedAutoparts = snapshot.docs.map((doc) {
+
+    List<Autopart> fetchedAutoparts =
+        await Future.wait(snapshot.docs.map((doc) async {
+      // Fetch suitableCars array
+      List<dynamic> suitableCarsData = doc.get('suitableCars') ?? [];
+      List<SuitableCar> suitableCars = suitableCarsData.map((carData) {
+        return SuitableCar(
+          companyName: carData['companyName'] ?? '',
+          modelName: carData['modelName'] ?? '',
+        );
+      }).toList();
+
       return Autopart(
         name: doc.get('name'),
         category: doc.get('category'),
@@ -106,11 +135,16 @@ class _ShowAutoPartsState extends State<ShowAutoParts> {
         image: doc.get('image'),
         quantity: doc.get('quantity'),
         inStock: doc.get('inStock') as bool? ?? false,
+        suitableCars: suitableCars,
+        price: doc.get('price'),
+        garageID: doc.get('garageID'), averageLife: doc.get('averageLife'),
+
+        // Pass suitableCars to Autopart
       );
-    }).toList();
+    }));
 
     setState(() {
-      addedAutoparts = fetchedAutoparts;
+      addedAutoparts = fetchedAutoparts.toList();
     });
   }
 

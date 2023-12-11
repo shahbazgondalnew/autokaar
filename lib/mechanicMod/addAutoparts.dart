@@ -444,10 +444,3 @@ class _AddAutopartScreenState extends State<AddAutopartScreen> {
     }
   }
 }
-
-class SuitableCar {
-  String companyName;
-  String modelName;
-
-  SuitableCar({required this.companyName, required this.modelName});
-}
