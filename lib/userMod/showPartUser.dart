@@ -17,6 +17,8 @@ class Autopart {
   final String subcategory;
   final String image;
   final int quantity;
+  final int averageLife;
+
   final bool inStock;
   final String garageID;
   int price;
@@ -29,6 +31,7 @@ class Autopart {
       required this.image,
       required this.quantity,
       required this.inStock,
+      required this.averageLife,
       required this.price});
 }
 
@@ -84,7 +87,7 @@ class _ShowAutoPartsUserState extends State<ShowAutoPartsUser> {
 
   Future<void> fetchAddedAutoparts() async {
     QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection('addedparts')
+        .collection('addedpartsall')
         .orderBy('name')
         .get();
     List<Autopart> fetchedAutoparts = snapshot.docs.map((doc) {
@@ -96,7 +99,8 @@ class _ShowAutoPartsUserState extends State<ShowAutoPartsUser> {
           quantity: doc.get('quantity'),
           inStock: doc.get('inStock') as bool? ?? false,
           price: doc.get('price'),
-          garageID: doc.get('garageID'));
+          garageID: doc.get('garageID'),
+          averageLife: doc.get('averageLife'));
     }).toList();
 
     setState(() {

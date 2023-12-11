@@ -5,6 +5,7 @@ import 'package:autokaar/userMod/carListscreen.dart';
 import 'package:autokaar/userMod/showNearbyMechanic.dart';
 import 'package:autokaar/userMod/showPartUser.dart';
 import 'package:autokaar/userMod/userChat.dart';
+import 'package:autokaar/userMod/userPersonalParts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -222,7 +223,7 @@ class _MainScreenState extends State<MainScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => UnderConstructionScreen(),
+                            builder: (context) => UserAddedPartsScreen(), //
                           ),
                         );
                       }

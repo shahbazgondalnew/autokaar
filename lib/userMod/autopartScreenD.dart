@@ -189,7 +189,9 @@ class _AutopartDetailsScreenState extends State<AutopartDetailsScreen> {
         'price': widget.autopart.price,
         'garageID': widget.autopart.garageID,
         'status': 'Pending',
-        'userID': user?.uid, // Replace with actual UID
+        'userID': user?.uid,
+        'averageLife': widget.autopart.averageLife
+        // Replace with actual UID
         // Add other fields as needed
       };
 

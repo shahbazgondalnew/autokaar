@@ -2,30 +2,30 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationHelper {
   static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
 
   static void initializeNotifications() {
     var initializationSettingsAndroid =
-    AndroidInitializationSettings('ic_notification');
+        AndroidInitializationSettings('ic_notification');
 
     var initializationSettings =
-    InitializationSettings(android: initializationSettingsAndroid);
+        InitializationSettings(android: initializationSettingsAndroid);
 
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
-  static Future<void> showNotification(String heading, String subHeading) async {
+  static Future<void> showNotification(
+      String heading, String subHeading) async {
     var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
       'your_channel_id',
       'Your Channel Name',
-      channelDescription:
-      'Your Channel Description',
+      channelDescription: 'Your Channel Description',
       importance: Importance.max,
       priority: Priority.high,
     );
 
     var platformChannelSpecifics =
-    NotificationDetails(android: androidPlatformChannelSpecifics);
+        NotificationDetails(android: androidPlatformChannelSpecifics);
 
     await flutterLocalNotificationsPlugin.show(
       1,

@@ -8,6 +8,7 @@ import 'package:autokaar/mechanicMod/selectGarage.dart';
 import 'package:autokaar/mechanicMod/showAppointmentMechanicX.dart';
 import 'package:autokaar/mechanicMod/showAutoparts.dart';
 import 'package:autokaar/mechanicMod/showMechanic.dart';
+import 'package:autokaar/mechanicMod/viewAutopartsOrder.dart';
 import 'package:autokaar/userMod/mainScreenApp.dart';
 import 'package:autokaar/commonMod/userProfileScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -32,7 +33,7 @@ class _MainScreenState extends State<MechanicMainScreen> {
     Option('Blog', Icons.book),
     Option('Appoint History', Icons.history),
     Option('AutoParts', Icons.build),
-    Option('Set Reminder', Icons.alarm),
+    Option('Parts Order', Icons.list),
     Option('Garage', Icons.location_on),
   ];
 
@@ -237,8 +238,7 @@ class _MainScreenState extends State<MechanicMainScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    UnderConstructionScreen()),
+                                builder: (context) => MyGaragesScreenPart()),
                           );
                         }
                         if (index == 5) {
