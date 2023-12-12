@@ -94,7 +94,7 @@ class _ShowAutoPartsUserState extends State<ShowAutoPartsUser> {
         price: doc.get('price'),
         garageID: doc.get('garageID'), averageLife: doc.get('averageLife'),
 
-        // Pass suitableCars to Autopart
+       
       );
     }));
 
