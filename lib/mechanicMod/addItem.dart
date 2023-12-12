@@ -79,7 +79,7 @@ class _AddMechanicServiceScreenState extends State<AddMechanicServiceScreen> {
             selectedServices = selectedServicesData.keys.toList();
             servicePrices = selectedServicesData.map(
                 (key, value) => MapEntry(key, value['servicePrice'] as int));
-            serviceTimes = selectedServicesData
+            serviceTimes = selectedServicesData //price for a service added
                 .map((key, value) => MapEntry(key, value['timeTaken'] as int?));
           });
         }
