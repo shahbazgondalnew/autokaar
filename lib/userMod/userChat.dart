@@ -30,7 +30,7 @@ class _UserChatScreenState extends State<UserChatScreen> {
           if (snapshot.hasData) {
             final messages = snapshot.data!.docs;
 
-            // Collect unique mechanics from the chat messages
+            
             Set<String> uniqueMechanics = Set<String>();
 
             for (final message in messages) {
