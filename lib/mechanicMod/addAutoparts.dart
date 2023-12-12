@@ -88,7 +88,7 @@ class _AddAutopartScreenState extends State<AddAutopartScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Autopart'),
+        title: Text('AutopartX'),
       ),
       body: SingleChildScrollView(
         child: Padding(
