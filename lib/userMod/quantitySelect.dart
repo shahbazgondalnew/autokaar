@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class QuantitySelector extends StatefulWidget {
   final int initialQuantity;
   final void Function(int) onChanged;
+  //quantity
 
   QuantitySelector({required this.initialQuantity, required this.onChanged});
 
