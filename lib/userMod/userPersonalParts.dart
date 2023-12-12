@@ -34,7 +34,7 @@ class _UserAddedPartsScreenState extends State<UserAddedPartsScreen> {
 
           if (snapshot.data == null || snapshot.data!.docs.isEmpty) {
             return Center(
-              child: Text('No user-added parts found'),
+              child: Text('No user-added parts found'), //Checking if user added parts
             );
           }
 
