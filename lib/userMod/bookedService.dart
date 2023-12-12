@@ -175,7 +175,7 @@ class BookedScreen extends StatelessWidget {
                                         SizedBox(height: 10),
                                         ElevatedButton(
                                           onPressed: () {
-                                            // Perform actions when "Set Reminder" is tapped
+                                           
                                           },
                                           child: Text('Set Reminder'),
                                         ),
