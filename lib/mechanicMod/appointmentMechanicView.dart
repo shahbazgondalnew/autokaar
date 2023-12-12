@@ -185,7 +185,7 @@ class _AddGarageScreenState extends State<AddGarageScreenX> {
                     });
                   }
                 },
-                child: Text('Select Location'),
+                child: Text('Select Location'), //Getting location for garage
               ),
               ElevatedButton(
                 onPressed: () {
