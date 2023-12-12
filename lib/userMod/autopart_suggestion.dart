@@ -8,6 +8,8 @@ class AutoPartSuggestion {
       String userId, List<Autopart> allAutoParts) async {
     UserCarInfo userCarInfo = await getUserCarInfoFromFirebase(userId);
     List<Autopart> suggestions = [];
+    print("Suggested On the base of :");
+    print(userCarInfo.toString());
 
     for (Autopart autoPart in allAutoParts) {
       double compatibilityScore =
@@ -56,6 +58,7 @@ class AutoPartSuggestion {
       Map<String, dynamic> data = userCarSnapshot.docs.first.data() ?? {};
       return UserCarInfo.fromMap(data);
     } else {
+      print("issue");
       // Handle the case where user car data doesn't exist
       return UserCarInfo(
         carID: '',

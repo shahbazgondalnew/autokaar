@@ -49,7 +49,8 @@ class _MechanicChatScreenState extends State<MechanicChatScreen> {
                           ConnectionState.waiting) {
                         // User data is still loading
                         return Container(
-                          margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                          margin: EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 16.0),
                           decoration: BoxDecoration(
                             color: Colors.black,
                             borderRadius: BorderRadius.circular(10),
@@ -73,7 +74,8 @@ class _MechanicChatScreenState extends State<MechanicChatScreen> {
                         String userName = userData?['name'] ?? '';
 
                         return Container(
-                          margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                          margin: EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 16.0),
                           decoration: BoxDecoration(
                             color: Colors.black,
                             borderRadius: BorderRadius.circular(10),
@@ -119,7 +121,8 @@ class _MechanicChatScreenState extends State<MechanicChatScreen> {
                       } else {
                         // User data not found
                         return Container(
-                          margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                          margin: EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 16.0),
                           decoration: BoxDecoration(
                             color: Colors.black,
                             borderRadius: BorderRadius.circular(10),
@@ -148,9 +151,7 @@ class _MechanicChatScreenState extends State<MechanicChatScreen> {
                                 color: Colors.white,
                               ),
                             ),
-                            onTap: () {
-
-                            },
+                            onTap: () {},
                           ),
                         );
                       }
@@ -158,7 +159,6 @@ class _MechanicChatScreenState extends State<MechanicChatScreen> {
                   );
                 }
               }
-
 
               return Container();
             },

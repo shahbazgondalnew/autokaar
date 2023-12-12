@@ -14,7 +14,7 @@ class _UserAddedPartsScreenState extends State<UserAddedPartsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('User Added Parts'),
+        title: Text('Reminder'),
       ),
       body: StreamBuilder(
         stream:
@@ -163,6 +163,13 @@ class _UserAddedPartCardState extends State<UserAddedPartCard> {
 
     print('Scheduled DateTime (UTC): ${scheduledDateTime.toUtc()}');
     print('Scheduled DateTime (PKT): $scheduledDateTime');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+            'Reminder set for ${scheduledDateTime.month}:${scheduledDateTime.day}:${scheduledDateTime.year}'),
+        backgroundColor: Colors.green,
+      ),
+    );
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
       0,
