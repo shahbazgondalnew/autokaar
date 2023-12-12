@@ -8,7 +8,7 @@ class AutoPartSuggestion {
       String userId, List<Autopart> allAutoParts) async {
     UserCarInfo userCarInfo = await getUserCarInfoFromFirebase(userId);
     List<Autopart> suggestions = [];
-    print("Suggested On the base of :");
+    print("Suggested On the base of :"); //Autopart suggestion
     print(userCarInfo.toString());
 
     for (Autopart autoPart in allAutoParts) {
