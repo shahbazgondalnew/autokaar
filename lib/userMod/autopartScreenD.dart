@@ -47,7 +47,7 @@ class _AutopartDetailsScreenState extends State<AutopartDetailsScreen> {
 
       if (garageSnapshot.exists) {
         final garageData = garageSnapshot.data() as Map<String, dynamic>;
-        setState(() {
+        setState(() { //Location based on longitude latitude
           garageName = garageData['garageName'] ?? 'Not Found';
           final googleLocation = garageData['googleLocation'];
           if (googleLocation != null &&
