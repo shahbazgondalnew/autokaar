@@ -30,7 +30,6 @@ class _UserChatScreenState extends State<UserChatScreen> {
           if (snapshot.hasData) {
             final messages = snapshot.data!.docs;
 
-            
             Set<String> uniqueMechanics = Set<String>();
 
             for (final message in messages) {
@@ -50,7 +49,8 @@ class _UserChatScreenState extends State<UserChatScreen> {
                       .doc(mechanicID)
                       .get(),
                   builder: (context, garageSnapshot) {
-                    if (garageSnapshot.connectionState == ConnectionState.waiting) {
+                    if (garageSnapshot.connectionState ==
+                        ConnectionState.waiting) {
                       // Garage data is still loading
                       return CircularProgressIndicator();
                     }
@@ -59,9 +59,9 @@ class _UserChatScreenState extends State<UserChatScreen> {
                       String garageName = garageData?['garageName'] ?? '';
                       String garageID = garageData?['garagenum'] ?? '';
 
-
                       return Container(
-                        margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                        margin: EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 16.0),
                         decoration: BoxDecoration(
                           color: Colors.black,
                           borderRadius: BorderRadius.circular(10),
@@ -87,16 +87,16 @@ class _UserChatScreenState extends State<UserChatScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ChatScreenUser(garageIDVar: garageID, currentUserID: widget.userId,
+                                builder: (context) => ChatScreenUser(
+                                  garageIDVar: garageID,
+                                  currentUserID: widget.userId,
                                 ),
                               ),
                             );
-
                           },
                         ),
                       );
                     } else {
-                      // Garage data not found
                       return Container();
                     }
                   },
