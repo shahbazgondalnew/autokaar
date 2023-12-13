@@ -27,12 +27,42 @@ class _ShowAutoPartsUserState extends State<ShowAutoPartsUser> {
   List<MechanicService> services = [];
   List<Autopart> addedAutoparts = [];
   String selectedOption = 'All';
+  late List<String> userCarNames;
 
   @override
   void initState() {
     super.initState();
     fetchAddedServices();
     fetchAddedAutoparts();
+  }
+
+  Future<void> fetchUserCars() async {
+    try {
+      FirebaseAuth auth = FirebaseAuth.instance;
+      User? user = auth.currentUser;
+
+      if (user != null) {
+        String userUid = user.uid;
+
+        QuerySnapshot userCarSnapshot = await FirebaseFirestore.instance
+            .collection('userCar')
+            .where('uid', isEqualTo: userUid)
+            .get();
+
+        setState(() {
+          userCarNames = userCarSnapshot.docs
+              .map((doc) => doc['carname'].toString())
+              .toList();
+          print(userCarNames.toString());
+        });
+      } else {
+        // Handle the case when the user is not signed in
+        print('User not signed in');
+      }
+    } catch (e) {
+      print('Error fetching user cars: $e');
+      // Handle the error as needed
+    }
   }
 
   Future<void> fetchAddedServices() async {

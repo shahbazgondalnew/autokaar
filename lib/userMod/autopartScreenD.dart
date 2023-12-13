@@ -22,11 +22,44 @@ class _AutopartDetailsScreenState extends State<AutopartDetailsScreen> {
   double longitude = 73.0782;
   late GoogleMapController mapController;
   int quantity = 1;
+  late String selectedCar = '';
+  late List<String> userCarNames;
 
   @override
   void initState() {
     super.initState();
     fetchGarageDetails();
+    userCarNames = [];
+    fetchUserCars();
+  }
+
+  Future<void> fetchUserCars() async {
+    try {
+      FirebaseAuth auth = FirebaseAuth.instance;
+      User? user = auth.currentUser;
+
+      if (user != null) {
+        String userUid = user.uid;
+
+        QuerySnapshot userCarSnapshot = await FirebaseFirestore.instance
+            .collection('userCar')
+            .where('uid', isEqualTo: userUid)
+            .get();
+
+        setState(() {
+          userCarNames = userCarSnapshot.docs
+              .map((doc) => doc['carname'].toString())
+              .toList();
+          print(userCarNames.toString());
+        });
+      } else {
+        // Handle the case when the user is not signed in
+        print('User not signed in');
+      }
+    } catch (e) {
+      print('Error fetching user cars: $e');
+      // Handle the error as needed
+    }
   }
 
   void _openGoogleMapsDirections() {
@@ -75,6 +108,33 @@ class _AutopartDetailsScreenState extends State<AutopartDetailsScreen> {
     }
   }
 
+  Future<String?> getCurrentUserUid() async {
+    try {
+      FirebaseAuth auth = FirebaseAuth.instance;
+      User? user = auth.currentUser;
+
+      if (user != null) {
+        String uid = user.uid;
+        return uid;
+      } else {
+        // If user is not signed in
+        return null;
+      }
+    } catch (e) {
+      print('Error getting current user UID: $e');
+      return null;
+    }
+  }
+
+  List<DropdownMenuItem<String>> buildDropdownItems() {
+    return userCarNames.map((carName) {
+      return DropdownMenuItem<String>(
+        value: carName,
+        child: Text(carName),
+      );
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,6 +165,21 @@ class _AutopartDetailsScreenState extends State<AutopartDetailsScreen> {
                     height: 200.0,
                   ),
                 ),
+              ),
+              DropdownButton<String>(
+                value: selectedCar,
+                hint: Text('Select Car'),
+                onChanged: (value) {
+                  setState(() {
+                    selectedCar = value!;
+                  });
+                },
+                items: userCarNames.map((usercarN) {
+                  return DropdownMenuItem<String>(
+                    value: usercarN,
+                    child: Text(usercarN),
+                  );
+                }).toList(),
               ),
               SizedBox(height: 16.0),
               ListView(
@@ -249,8 +324,6 @@ class _AutopartDetailsScreenState extends State<AutopartDetailsScreen> {
         'status': 'Pending',
         'userID': user?.uid,
         'averageLife': widget.autopart.averageLife
-        // Replace with actual UID
-        // Add other fields as needed
       };
 
       // Add the order to the 'autopartOrder' collection

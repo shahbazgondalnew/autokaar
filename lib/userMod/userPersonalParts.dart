@@ -1,3 +1,4 @@
+import 'package:autokaar/userMod/autopartReminder.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -34,7 +35,8 @@ class _UserAddedPartsScreenState extends State<UserAddedPartsScreen> {
 
           if (snapshot.data == null || snapshot.data!.docs.isEmpty) {
             return Center(
-              child: Text('No user-added parts found'), //Checking if user added parts
+              child: Text(
+                  'No user-added parts found'), //Checking if user added parts
             );
           }
 
@@ -84,6 +86,15 @@ class _UserAddedPartCardState extends State<UserAddedPartCard> {
       child: ListTile(
         title: Text(widget.data['name'] ?? ''),
         subtitle: Text('Quantity: ${widget.data['quantity']}'),
+        onTap: () {
+          // Handle tap on the list item (open a different screen)
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ReminderScreen(data: widget.data),
+            ),
+          );
+        },
         trailing: IconButton(
           icon: Icon(Icons.notifications),
           onPressed: () {
