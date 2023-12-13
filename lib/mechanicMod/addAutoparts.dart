@@ -87,8 +87,32 @@ class _AddAutopartScreenState extends State<AddAutopartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: Container(
+        width: double
+            .infinity, // Make the button take the full width of the screen
+        margin: EdgeInsets.only(bottom: 16.0), // Add bottom margin
+        child: ElevatedButton(
+          onPressed: () async {
+            if (addedCars.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Kindly add suitable car')),
+              );
+            } else {
+              await _submitFormTwo(widget.garageId, addedCars);
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            primary: Colors.green, // Set the button background color to green
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0), // Set border radius
+            ),
+          ),
+          child:
+              _isLoading ? const CircularProgressIndicator() : Text('Submit'),
+        ),
+      ),
       appBar: AppBar(
-        title: Text('AutopartX'),
+        title: Text('Autopart'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -198,6 +222,7 @@ class _AddAutopartScreenState extends State<AddAutopartScreen> {
                     return null;
                   },
                 ),
+
                 ElevatedButton(
                   onPressed: () async {
                     // Navigate to SuitableCarScreen
@@ -216,7 +241,23 @@ class _AddAutopartScreenState extends State<AddAutopartScreen> {
                       });
                     }
                   },
-                  child: Text('Add Car'),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.yellow,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0)),
+                    padding: EdgeInsets.all(16.0),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.car_crash, size: 24.0, color: Colors.black),
+                      SizedBox(width: 8.0),
+                      Text(
+                        'Add Suitable Car',
+                        style: TextStyle(fontSize: 16.0, color: Colors.black),
+                      ),
+                    ],
+                  ),
                 ),
 
 // Display the list of added cars below the button
@@ -228,21 +269,6 @@ class _AddAutopartScreenState extends State<AddAutopartScreen> {
                 ),
 
                 SizedBox(height: 16),
-                SizedBox(height: 16.0),
-                ElevatedButton(
-                  onPressed: () async {
-                    if (addedCars.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('kindly add suitable car')),
-                      );
-                    } else {
-                      await _submitFormTwo(widget.garageId, addedCars);
-                    }
-                  },
-                  child: _isLoading
-                      ? const CircularProgressIndicator()
-                      : Text('Submit'),
-                ),
               ],
             ),
           ),

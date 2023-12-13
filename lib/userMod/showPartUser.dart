@@ -92,9 +92,8 @@ class _ShowAutoPartsUserState extends State<ShowAutoPartsUser> {
         inStock: doc.get('inStock') as bool? ?? false,
         suitableCars: suitableCars,
         price: doc.get('price'),
-        garageID: doc.get('garageID'), averageLife: doc.get('averageLife'),
-
-       
+        garageID: doc.get('garageID'),
+        averageLife: doc.get('averageLife'),
       );
     }));
 

@@ -1,6 +1,5 @@
 import 'package:autokaar/mechanicMod/showAutoparts.dart';
 
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AutoPartSuggestion {
