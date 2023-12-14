@@ -14,11 +14,19 @@ class AutoPartSuggestion {
       double compatibilityScore =
           calculateCompatibilityScore(userCarInfo, autoPart);
 
+<<<<<<< HEAD
+=======
+     
+>>>>>>> 30986fdec5fa05c962032939b04e0ee056578c1b
       if (compatibilityScore > 0.7) {
         suggestions.add(autoPart);
       }
     }
 
+<<<<<<< HEAD
+=======
+    
+>>>>>>> 30986fdec5fa05c962032939b04e0ee056578c1b
     suggestions.sort((a, b) => calculateCompatibilityScore(userCarInfo, b)
         .compareTo(calculateCompatibilityScore(userCarInfo, a)));
 
@@ -26,6 +34,12 @@ class AutoPartSuggestion {
   }
 
   double calculateCompatibilityScore(UserCarInfo userCar, Autopart autoPart) {
+<<<<<<< HEAD
+=======
+   
+
+   
+>>>>>>> 30986fdec5fa05c962032939b04e0ee056578c1b
     bool isSuitable = autoPart.suitableCars.any((suitableCar) =>
         suitableCar.companyName.toLowerCase() ==
             userCar.company.toLowerCase() &&
