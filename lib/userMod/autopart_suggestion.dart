@@ -28,8 +28,7 @@ class AutoPartSuggestion {
   }
 
   double calculateCompatibilityScore(UserCarInfo userCar, Autopart autoPart) {
-    // Example: Implement your compatibility score calculation logic
-    // Adjust this logic based on your data model and requirements
+   
 
     // Check if there is any SuitableCar that matches both company and model
     bool isSuitable = autoPart.suitableCars.any((suitableCar) =>
