@@ -30,7 +30,7 @@ class AutoPartSuggestion {
   double calculateCompatibilityScore(UserCarInfo userCar, Autopart autoPart) {
    
 
-    // Check if there is any SuitableCar that matches both company and model
+   
     bool isSuitable = autoPart.suitableCars.any((suitableCar) =>
         suitableCar.companyName.toLowerCase() ==
             userCar.company.toLowerCase() &&
