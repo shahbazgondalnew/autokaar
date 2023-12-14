@@ -14,13 +14,13 @@ class AutoPartSuggestion {
       double compatibilityScore =
           calculateCompatibilityScore(userCarInfo, autoPart);
 
-      // Example: Consider auto parts with a compatibility score greater than a threshold
+     
       if (compatibilityScore > 0.7) {
         suggestions.add(autoPart);
       }
     }
 
-    // Sort suggestions by compatibility score in descending order
+    
     suggestions.sort((a, b) => calculateCompatibilityScore(userCarInfo, b)
         .compareTo(calculateCompatibilityScore(userCarInfo, a)));
 
