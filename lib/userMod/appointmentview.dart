@@ -116,7 +116,6 @@ class AppointmentDetailsScreen extends StatelessWidget {
                                                   .collection('bookedservice')
                                                   .doc(appointmentID);
 
-                                          // Delete the appointment document
                                           appointmentRef.delete().then((value) {
                                             print(
                                                 'Appointment deleted successfully');
@@ -125,15 +124,12 @@ class AppointmentDetailsScreen extends StatelessWidget {
                                                 'Failed to delete appointment: $error');
                                           });
 
-                                          // Perform delete operation and close the dialog
-                                          // Perform delete operation and close the dialog
                                           Navigator.pop(context);
                                         },
                                         child: Text('Delete'),
                                       ),
                                       TextButton(
                                         onPressed: () {
-                                          // Close the dialog
                                           Navigator.pop(context);
                                         },
                                         child: Text('Cancel'),

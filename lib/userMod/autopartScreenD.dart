@@ -285,11 +285,6 @@ class _AutopartDetailsScreenState extends State<AutopartDetailsScreen> {
   Future<void> _placeOrder() async {
     final User? user = FirebaseAuth.instance.currentUser;
     try {
-      // Your existing code to fetch garage details
-      // ...
-
-      // Create a new order object
-
       final order = {
         'name': widget.autopart.name,
         'category': widget.autopart.category,
@@ -304,15 +299,12 @@ class _AutopartDetailsScreenState extends State<AutopartDetailsScreen> {
         'addtimerun': 45600
       };
 
-      // Add the order to the 'autopartOrder' collection
       await FirebaseFirestore.instance.collection('autopartOrder').add(order);
 
-      // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Order placed successfully')),
       );
     } catch (error) {
-      // Show error message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to place order')),
       );

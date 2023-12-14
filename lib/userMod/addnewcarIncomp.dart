@@ -17,7 +17,6 @@ class _AddCarScreenState extends State<AddCarScreen> {
     'Honda',
     'Toyota',
     'Suzuki',
-    // Add more company names as needed
   ];
 
   void _addCarModel(String companyName, String modelName) {

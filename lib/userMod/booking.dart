@@ -1,4 +1,3 @@
-
 import 'package:autokaar/userMod/showFreeSlot.dart';
 import 'package:autokaar/userMod/showNearbyMechanic.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,7 +6,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
 import '../commonMod/notificationClass.dart';
-
 
 class BookingScreen extends StatefulWidget {
   final String garageId;
@@ -19,20 +17,18 @@ class BookingScreen extends StatefulWidget {
 }
 
 class _BookingScreenState extends State<BookingScreen> {
-  String selectedCarId=''; // To store the selected car's ID
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>(); // Form key for validation
+  String selectedCarId = ''; // To store the selected car's ID
+  GlobalKey<FormState> _formKey =
+      GlobalKey<FormState>(); // Form key for validation
 
   Map<String, dynamic>? selectedCar;
   Map<String, dynamic> workingHours = {};
   DateTime selectedDate = DateTime.now();
 
-
-
-
-  List<Service> services = []; // List to hold available services
-  Map<String, bool> selectedServices = {}; // Map to hold selected services
+  List<Service> services = [];
+  Map<String, bool> selectedServices = {};
   var selectedStartTime;
-  bool validTime=false;
+  bool validTime = false;
   @override
   void initState() {
     super.initState();
@@ -50,35 +46,34 @@ class _BookingScreenState extends State<BookingScreen> {
         .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
         Map<String, dynamic> garageData =
-        documentSnapshot.data() as Map<String, dynamic>;
+            documentSnapshot.data() as Map<String, dynamic>;
 
         if (garageData.containsKey('workingHours')) {
-          List<dynamic> workingHoursList =
-          garageData['workingHours']['days'];
+          List<dynamic> workingHoursList = garageData['workingHours']['days'];
 
           if (weekday >= 0 && weekday < workingHoursList.length) {
             Map<String, dynamic> workingHoursMap =
-            workingHoursList[weekday] as Map<String, dynamic>;
+                workingHoursList[weekday] as Map<String, dynamic>;
 
             setState(() {
               workingHours = workingHoursMap;
             });
           } else {
             setState(() {
-              workingHours = {}; // Clear working hours if not available for the selected weekday
+              workingHours = {};
             });
             print('Working hours not available for the selected weekday.');
           }
         } else {
           setState(() {
-            workingHours = {}; // Clear working hours if not available
+            workingHours = {};
           });
           print('Working hours data not available.');
         }
       }
     }).catchError((error) {
       setState(() {
-        workingHours = {}; // Clear working hours in case of error
+        workingHours = {};
       });
       print('Error fetching working hours: $error');
     });
@@ -93,11 +88,12 @@ class _BookingScreenState extends State<BookingScreen> {
 
       if (addedServiceSnapshot.exists) {
         Map<String, dynamic>? addedServiceData =
-        addedServiceSnapshot.data() as Map<String, dynamic>?;
+            addedServiceSnapshot.data() as Map<String, dynamic>?;
 
-        if (addedServiceData != null && addedServiceData.containsKey('services')) {
+        if (addedServiceData != null &&
+            addedServiceData.containsKey('services')) {
           Map<String, dynamic> serviceData =
-          Map<String, dynamic>.from(addedServiceData['services'] as Map);
+              Map<String, dynamic>.from(addedServiceData['services'] as Map);
 
           List<Service> fetchedServices = [];
 
@@ -105,7 +101,6 @@ class _BookingScreenState extends State<BookingScreen> {
             int price = serviceData[serviceId]['servicePrice'] ?? 0;
             int timeTaken = serviceData[serviceId]['timeTaken'] ?? 0;
 
-            // Fetch the service name from the 'mechanicService' collection
             DocumentSnapshot serviceSnapshot = await FirebaseFirestore.instance
                 .collection('mechanicService')
                 .doc(serviceId)
@@ -136,8 +131,6 @@ class _BookingScreenState extends State<BookingScreen> {
     }
   }
 
-
-
   void _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -151,12 +144,8 @@ class _BookingScreenState extends State<BookingScreen> {
         selectedDate = pickedDate;
         determineWorkingHours(selectedDate);
       });
-
-
-
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +155,7 @@ class _BookingScreenState extends State<BookingScreen> {
     selectedServices.forEach((serviceId, isSelected) {
       if (isSelected) {
         Service selectedService =
-        services.firstWhere((service) => service.id == serviceId);
+            services.firstWhere((service) => service.id == serviceId);
         totalServicePrice += selectedService.price;
         totalServiceTime += selectedService.performServiceTime;
       }
@@ -181,7 +170,6 @@ class _BookingScreenState extends State<BookingScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Select Date Button
             ElevatedButton.icon(
               onPressed: () => _selectDate(context),
               icon: Icon(Icons.calendar_today),
@@ -200,7 +188,6 @@ class _BookingScreenState extends State<BookingScreen> {
               ),
             ),
             SizedBox(height: 16),
-            // Working Hours
             Container(
               width: 300,
               padding: EdgeInsets.all(16),
@@ -242,13 +229,11 @@ class _BookingScreenState extends State<BookingScreen> {
                     ],
                   ),
                   SizedBox(height: 10),
-                  // Show working hours in a single line
                   Text(
                     'Start: ${workingHours['startHour'] ?? ''}:${workingHours['startMinute'] ?? ''} '
-                        '- End: ${workingHours['endHour'] ?? ''}:${workingHours['endMinute'] ?? ''}',
+                    '- End: ${workingHours['endHour'] ?? ''}:${workingHours['endMinute'] ?? ''}',
                     style: TextStyle(color: Colors.white),
                   ),
-                  // Show if garage is open or closed
                   Text(
                     'Status: ${workingHours['closed'] == true ? 'Closed' : 'Open'}',
                     style: TextStyle(color: Colors.white),
@@ -256,9 +241,7 @@ class _BookingScreenState extends State<BookingScreen> {
                 ],
               ),
             ),
-
             SizedBox(height: 24),
-            // Available Services
             Text(
               'Available Services:',
               style: TextStyle(
@@ -295,34 +278,37 @@ class _BookingScreenState extends State<BookingScreen> {
                 );
               },
             ),
-            // Select Time Slot Button
             ElevatedButton(
               onPressed: () async {
                 print("before");
-                selectedDate = DateTime(selectedDate.year, selectedDate.month, selectedDate.day, 0, 0);
+                selectedDate = DateTime(selectedDate.year, selectedDate.month,
+                    selectedDate.day, 0, 0);
                 print(selectedDate);
-                List<Map<String, String>> bookedSlotsData = await fetchBookedSlots(widget.garageId, selectedDate);
+                List<Map<String, String>> bookedSlotsData =
+                    await fetchBookedSlots(widget.garageId, selectedDate);
                 print("after oneX");
                 print(workingHours);
                 print("other screen");
 
-               final selectedConfirmSlot= await Navigator.push(
+                final selectedConfirmSlot = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => SelectSlotScreen(  workingHours: workingHours, bookedSlots: bookedSlotsData, slotDurationInMinutes: totalServiceTime,
-
+                    builder: (context) => SelectSlotScreen(
+                      workingHours: workingHours,
+                      bookedSlots: bookedSlotsData,
+                      slotDurationInMinutes: totalServiceTime,
                     ),
                   ),
-                );// Add this line to pop the current screen.
+                );
                 if (selectedConfirmSlot != null) {
-                  final startTimeString = selectedConfirmSlot.split(' - ')[0]; // Extract the starting time from the selected slot
+                  final startTimeString = selectedConfirmSlot.split(' - ')[
+                      0]; // Extract the starting time from the selected slot
                   final hour = int.parse(startTimeString.split(':')[0]);
                   final minute = int.parse(startTimeString.split(':')[1]);
-                  selectedStartTime = TimeOfDay(hour: hour, minute: minute); // Convert to TimeOfDay
+                  selectedStartTime = TimeOfDay(
+                      hour: hour, minute: minute); // Convert to TimeOfDay
                   print('Selected timeXX: $selectedStartTime');
-                  // Now, you have the selected time as a TimeOfDay.
                 } else {
-                  // Show a SnackBar with the error message
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('No TimeSlot is Selected'),
@@ -331,21 +317,16 @@ class _BookingScreenState extends State<BookingScreen> {
                   );
                 }
 
-
                 print(selectedConfirmSlot);
               },
-
-
-
-
               style: ElevatedButton.styleFrom(
-                primary: Colors.black, // Button background color
-                onPrimary: Colors.white, // Button text color
+                primary: Colors.black,
+                onPrimary: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
                 padding: EdgeInsets.symmetric(vertical: 12),
-                elevation: 5, // Button elevation
+                elevation: 5,
                 minimumSize: Size(double.infinity, 0), // Full width
               ),
               child: Row(
@@ -361,9 +342,6 @@ class _BookingScreenState extends State<BookingScreen> {
               ),
             ),
             Divider(),
-
-
-
             ElevatedButton(
               onPressed: () => selectCar(),
               style: ElevatedButton.styleFrom(
@@ -388,8 +366,6 @@ class _BookingScreenState extends State<BookingScreen> {
                 ],
               ),
             ),
-
-
           ],
         ),
       ),
@@ -424,19 +400,21 @@ class _BookingScreenState extends State<BookingScreen> {
                 print(totalServiceTime);
                 print("XXXXXX");
 
-                if (selectedCarId != null && selectedCarId.isNotEmpty && totalServiceTime != 0 && selectedStartTime != null) {
-
+                if (selectedCarId != null &&
+                    selectedCarId.isNotEmpty &&
+                    totalServiceTime != 0 &&
+                    selectedStartTime != null) {
                   // Check that selectedCarId is not null, totalServiceTime is not zero, and selectedTime is not null
                   uploadToMechanicDailyTimeline(
                     garageId: widget.garageId,
                     date: selectedDate,
                     startTime: selectedStartTime,
-                    endTime: addMinutesToTime(selectedStartTime, totalServiceTime),
+                    endTime:
+                        addMinutesToTime(selectedStartTime, totalServiceTime),
                     services: selectedServices.keys.toList(),
                     context: context,
                     carId: selectedCarId,
                   );
-
                 } else {
                   // Handle the case where any of the required fields is empty or invalid
                   String errorMessage = '';
@@ -456,8 +434,6 @@ class _BookingScreenState extends State<BookingScreen> {
                   );
                 }
               },
-
-
               style: ElevatedButton.styleFrom(
                 primary: Colors.green, // Change the background color to green
                 onPrimary: Colors.white, // Button text color
@@ -480,13 +456,12 @@ class _BookingScreenState extends State<BookingScreen> {
                 ],
               ),
             ),
-
           ],
         ),
       ),
     );
-
   }
+
   TimeOfDay addMinutesToTime(TimeOfDay time, int minutesToAdd) {
     int totalMinutes = time.hour * 60 + time.minute + minutesToAdd;
     int newHour = totalMinutes ~/ 60;
@@ -498,6 +473,7 @@ class _BookingScreenState extends State<BookingScreen> {
 
     return TimeOfDay(hour: newHour, minute: newMinute);
   }
+
   String getCurrentUserUid() {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -515,7 +491,8 @@ class _BookingScreenState extends State<BookingScreen> {
     return TimeOfDay(hour: hour, minute: minute);
   }
 
-  Future<List<Map<String, String>>> fetchBookedSlots(String garageId, DateTime date) async {
+  Future<List<Map<String, String>>> fetchBookedSlots(
+      String garageId, DateTime date) async {
     List<Map<String, String>> bookedSlots = [];
 
     try {
@@ -551,7 +528,6 @@ class _BookingScreenState extends State<BookingScreen> {
     return bookedSlots;
   }
 
-
   Future<void> selectCar() async {
     try {
       String userUid = getCurrentUserUid();
@@ -562,8 +538,9 @@ class _BookingScreenState extends State<BookingScreen> {
           .where('uid', isEqualTo: userUid)
           .get();
 
-      List<Map<String, dynamic>> cars =
-      querySnapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+      List<Map<String, dynamic>> cars = querySnapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
       print('Number of cars: ${cars.length}');
 
       Map<String, dynamic>? selectedCarResult = await Navigator.push(
@@ -590,7 +567,9 @@ class _BookingScreenState extends State<BookingScreen> {
       // Calculate the total time taken by booked services
       int totalTimeTaken = 0;
       for (var serviceId in selectedServices.keys) {
-        int timeTaken = services.firstWhere((service) => service.id == serviceId).performServiceTime;
+        int timeTaken = services
+            .firstWhere((service) => service.id == serviceId)
+            .performServiceTime;
         totalTimeTaken += timeTaken;
       }
 
@@ -605,7 +584,8 @@ class _BookingScreenState extends State<BookingScreen> {
         int endMinute = workingHoursForDay['endMinute'];
 
         // Calculate the available time for the day
-        int availableTime = endHour * 60 + endMinute - (startHour * 60 + startMinute);
+        int availableTime =
+            endHour * 60 + endMinute - (startHour * 60 + startMinute);
 
         if (availableTime >= totalTimeTaken) {
           TimeOfDay? selectedTime = await showTimePicker(
@@ -613,7 +593,8 @@ class _BookingScreenState extends State<BookingScreen> {
             initialTime: TimeOfDay(hour: startHour, minute: startMinute),
             builder: (BuildContext context, Widget? child) {
               return MediaQuery(
-                data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+                data: MediaQuery.of(context)
+                    .copyWith(alwaysUse24HourFormat: true),
                 child: child!,
               );
             },
@@ -628,16 +609,18 @@ class _BookingScreenState extends State<BookingScreen> {
             int startTotalMinutes = startHour * 60 + startMinute;
             int endTotalMinutes = endHour * 60 + endMinute;
 
-            if (selectedTotalMinutes >= startTotalMinutes && selectedTotalMinutes <= endTotalMinutes) {
-              selectedStartTime=selectedTime;
-              validTime=true;
+            if (selectedTotalMinutes >= startTotalMinutes &&
+                selectedTotalMinutes <= endTotalMinutes) {
+              selectedStartTime = selectedTime;
+              validTime = true;
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Appointment booked for ${selectedTime.format(context)}'),
+                  content: Text(
+                      'Appointment booked for ${selectedTime.format(context)}'),
                 ),
               );
             } else {
-              validTime=false;
+              validTime = false;
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('Selected time is outside working hours.'),
@@ -646,7 +629,7 @@ class _BookingScreenState extends State<BookingScreen> {
             }
           }
         } else {
-          validTime=false;
+          validTime = false;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Not enough available time for booking.'),
@@ -680,13 +663,14 @@ class _BookingScreenState extends State<BookingScreen> {
     required String carId,
   }) async {
     try {
-      final CollectionReference appointmentsCollection = FirebaseFirestore.instance.collection('Bookedappointments');
+      final CollectionReference appointmentsCollection =
+          FirebaseFirestore.instance.collection('Bookedappointments');
 
       // Replace this with code to get the current user's UID from Firebase Authentication
-      String currentUserUid = getCurrentUserUid(); // Replace this line with actual code
+      String currentUserUid =
+          getCurrentUserUid(); // Replace this line with actual code
 
       await appointmentsCollection.add({
-
         'garageId': garageId,
         'date': date,
         'startTime': startTime.format(context),
@@ -705,13 +689,13 @@ class _BookingScreenState extends State<BookingScreen> {
       String formattedDate = DateFormat.yMd().format(date);
       NotificationHelper.initializeNotifications();
       String heading = 'Appointment booked on $formattedDate';
-      String subHeading = 'Time: ${startTime.format(context)} - ${endTime.format(context)}';
+      String subHeading =
+          'Time: ${startTime.format(context)} - ${endTime.format(context)}';
 
 // Show the notification with the heading and subheading
       NotificationHelper.showNotification(heading, subHeading);
 
       // After successfully adding the appointment, navigate to the appointment list screen
-
     } catch (error) {
       print('Error uploading appointment: $error');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -721,9 +705,6 @@ class _BookingScreenState extends State<BookingScreen> {
       );
     }
   }
-
-
-
 }
 
 class Service {
@@ -755,7 +736,7 @@ class CarSelectionScreen extends StatelessWidget {
         itemCount: cars.length,
         itemBuilder: (context, index) {
           return ListTile(
-            title: Text(cars[index]['carname'] ?? ''),//yeh change
+            title: Text(cars[index]['carname'] ?? ''), //yeh change
             subtitle: Text(cars[index]['company'] ?? ''),
             onTap: () {
               Navigator.pop(context, cars[index]); // Pass the selected car back

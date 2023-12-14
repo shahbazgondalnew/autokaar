@@ -7,20 +7,18 @@ class AutoPartSuggestion {
       String userId, List<Autopart> allAutoParts) async {
     UserCarInfo userCarInfo = await getUserCarInfoFromFirebase(userId);
     List<Autopart> suggestions = [];
-    print("Suggested On the base of :"); //Autopart suggestion
+    print("Suggested On the base of :");
     print(userCarInfo.toString());
 
     for (Autopart autoPart in allAutoParts) {
       double compatibilityScore =
           calculateCompatibilityScore(userCarInfo, autoPart);
 
-      // Example: Consider auto parts with a compatibility score greater than a threshold
       if (compatibilityScore > 0.7) {
         suggestions.add(autoPart);
       }
     }
 
-    // Sort suggestions by compatibility score in descending order
     suggestions.sort((a, b) => calculateCompatibilityScore(userCarInfo, b)
         .compareTo(calculateCompatibilityScore(userCarInfo, a)));
 
@@ -28,19 +26,15 @@ class AutoPartSuggestion {
   }
 
   double calculateCompatibilityScore(UserCarInfo userCar, Autopart autoPart) {
-    // Example: Implement your compatibility score calculation logic
-    // Adjust this logic based on your data model and requirements
-
-    // Check if there is any SuitableCar that matches both company and model
     bool isSuitable = autoPart.suitableCars.any((suitableCar) =>
         suitableCar.companyName.toLowerCase() ==
             userCar.company.toLowerCase() &&
         suitableCar.modelName.toLowerCase() == userCar.carModel.toLowerCase());
 
     if (isSuitable) {
-      return 1.0; // Full compatibility
+      return 1.0;
     } else {
-      return 0.0; // No compatibility
+      return 0.0;
     }
   }
 
@@ -49,16 +43,15 @@ class AutoPartSuggestion {
         await FirebaseFirestore.instance
             .collection('userCar')
             .where('uid', isEqualTo: userId)
-            .limit(1) // Assuming there is at most one document per user
+            .limit(1)
             .get();
 
     if (userCarSnapshot.docs.isNotEmpty) {
-      // Use the first document if there are multiple (though it's expected to be only one)
       Map<String, dynamic> data = userCarSnapshot.docs.first.data() ?? {};
       return UserCarInfo.fromMap(data);
     } else {
       print("issue");
-      // Handle the case where user car data doesn't exist
+
       return UserCarInfo(
         carID: '',
         carModel: '',
@@ -97,7 +90,6 @@ class UserCarInfo {
     required this.urlS,
   });
 
-  // Factory method to create UserCarInfo from a Map (Firestore data)
   factory UserCarInfo.fromMap(Map<String, dynamic> data) {
     return UserCarInfo(
       carID: data['carID'] ?? '',
