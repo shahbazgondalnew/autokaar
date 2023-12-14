@@ -150,7 +150,7 @@ class _ShowAutoPartsUserState extends State<ShowAutoPartsUser> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('AutoPartsX'),
+        title: Text('AutoParts'),
       ),
       body: Column(
         children: [
@@ -164,9 +164,8 @@ class _ShowAutoPartsUserState extends State<ShowAutoPartsUser> {
                   selectedOption = newValue ?? 'All';
                 });
 
-                // Fetch autoparts based on the selected option
                 if (selectedOption == 'All') {
-                  fetchAddedAutoparts(); // Fetch all autoparts
+                  fetchAddedAutoparts();
                 } else {
                   User? currentUser = FirebaseAuth.instance.currentUser;
                   if (currentUser != null) {
@@ -192,7 +191,7 @@ class _ShowAutoPartsUserState extends State<ShowAutoPartsUser> {
               }).toList(),
             ),
           ),
-          // Autoparts GridView
+
           Expanded(
             child: addedAutoparts.isNotEmpty
                 ? GridView.builder(

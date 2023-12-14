@@ -45,7 +45,7 @@ class _PaymentDataListScreenState extends State<PaymentDataListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Payment Data List'),
+        title: Text('Payments'),
       ),
       body: Column(
         children: [
@@ -77,8 +77,7 @@ class _PaymentDataListScreenState extends State<PaymentDataListScreen> {
             ),
           ),
           Expanded(
-            child:
-            ListView.builder(
+            child: ListView.builder(
               itemCount: paymentData.length,
               itemBuilder: (context, index) {
                 final payment = paymentData[index];
@@ -97,8 +96,10 @@ class _PaymentDataListScreenState extends State<PaymentDataListScreen> {
                       );
                     },
                     child: ListTile(
-                      title: Text('Appointment ID: ${payment['appointmentId']}'),
-                      subtitle: Text('Total Price: ${payment['totalPrice']} PKR'),
+                      title:
+                          Text('Appointment ID: ${payment['appointmentId']}'),
+                      subtitle:
+                          Text('Total Price: ${payment['totalPrice']} PKR'),
                     ),
                   );
                 }
@@ -113,12 +114,9 @@ class _PaymentDataListScreenState extends State<PaymentDataListScreen> {
   }
 }
 
-
 //
 
 // AppointmentDetailScreen.dart
-
-
 
 class AppointmentDetailScreen extends StatelessWidget {
   final Map<String, dynamic> appointmentData;
@@ -147,5 +145,3 @@ class AppointmentDetailScreen extends StatelessWidget {
     );
   }
 }
-
-

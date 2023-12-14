@@ -19,7 +19,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Orders for Garage'),
+        title: Text('Orders'),
       ),
       body: Column(
         children: [
@@ -61,8 +61,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
                     return OrderCard(
                       data: data,
                       onUpdateStatus: (String newStatus) {
-                        // No need to manually update the status here,
-                        // as it's already updated in the OrderCard widget
+                        FirebaseFirestore.instance
+                            .collection('autopartOrder')
+                            .doc(document.id)
+                            .update({'status': newStatus});
                       },
                     );
                   }).toList(),

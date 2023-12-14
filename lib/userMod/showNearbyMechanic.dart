@@ -26,7 +26,7 @@ class _NearbyGaragesScreenState extends State<NearbyGaragesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Nearby Mechanic'),
+        title: Text('Mechanic'),
       ),
       body: Column(
         children: [
@@ -56,9 +56,11 @@ class _NearbyGaragesScreenState extends State<NearbyGaragesScreen> {
               itemCount: _markers.length,
               itemBuilder: (context, index) {
                 final marker = _markers[index];
-                final distance = calculateDistance(marker.position.latitude, marker.position.longitude);
+                final distance = calculateDistance(
+                    marker.position.latitude, marker.position.longitude);
                 return Container(
-                  margin: EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+                  margin:
+                      EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     gradient: const LinearGradient(
@@ -85,7 +87,6 @@ class _NearbyGaragesScreenState extends State<NearbyGaragesScreen> {
                         _navigateToChatScreen(marker.markerId.value);
                       },
                     ),
-
                     title: Text(
                       marker.infoWindow.title ?? '',
                       style: TextStyle(
@@ -128,7 +129,7 @@ class _NearbyGaragesScreenState extends State<NearbyGaragesScreen> {
   Future<void> fetchMechanics() async {
     try {
       final QuerySnapshot snapshot =
-      await FirebaseFirestore.instance.collection('mechanicGarage').get();
+          await FirebaseFirestore.instance.collection('mechanicGarage').get();
 
       setState(() {
         _markers = snapshot.docs.map((DocumentSnapshot document) {
@@ -150,7 +151,9 @@ class _NearbyGaragesScreenState extends State<NearbyGaragesScreen> {
           return Marker(
             markerId: MarkerId(document.id),
             position: LatLng(latitude, longitude),
-            infoWindow: InfoWindow(title: garageName), // Set the garage name as the info window title
+            infoWindow: InfoWindow(
+                title:
+                    garageName), // Set the garage name as the info window title
             onTap: () {
               _navigateToGarageLocation(LatLng(latitude, longitude));
             },
@@ -183,11 +186,12 @@ class _NearbyGaragesScreenState extends State<NearbyGaragesScreen> {
       final userLatitude = _userLocation!.latitude;
       final userLongitude = _userLocation!.longitude;
       return Geolocator.distanceBetween(
-        userLatitude,
-        userLongitude,
-        latitude,
-        longitude,
-      ) / 1000; // Convert to kilometers
+            userLatitude,
+            userLongitude,
+            latitude,
+            longitude,
+          ) /
+          1000; // Convert to kilometers
     }
     return 0;
   }
@@ -197,6 +201,7 @@ class _NearbyGaragesScreenState extends State<NearbyGaragesScreen> {
       _mapController!.animateCamera(CameraUpdate.newLatLng(position));
     }
   }
+
   void _navigateToChatScreen(String garageId) {
     Navigator.push(
       context,
@@ -205,6 +210,7 @@ class _NearbyGaragesScreenState extends State<NearbyGaragesScreen> {
       ),
     );
   }
+
   void _navigateToBookingScreen(String garageId) {
     Navigator.push(
       context,
@@ -214,5 +220,3 @@ class _NearbyGaragesScreenState extends State<NearbyGaragesScreen> {
     );
   }
 }
-
-

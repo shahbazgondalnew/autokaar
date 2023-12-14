@@ -57,7 +57,7 @@ class _SuitableCarScreenState extends State<SuitableCarScreen> {
         selectedCompany != null ? getModelsForCompany(selectedCompany!) : [];
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Suitable Car'),
+        title: Text('Suitable Car'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

@@ -39,7 +39,8 @@ class _ChatScreenUserState extends State<ChatScreenUser> {
               itemCount: messages.length,
               itemBuilder: (context, index) {
                 final message = messages[index];
-                final timestamp = message['timestamp']?.toDate().toString() ?? '';
+                final timestamp =
+                    message['timestamp']?.toDate().toString() ?? '';
                 final typeOfMessage = message['type'] ?? '';
 
                 if (typeOfMessage == 'mechanic') {
@@ -50,7 +51,8 @@ class _ChatScreenUserState extends State<ChatScreenUser> {
                       children: [
                         Container(
                           padding: EdgeInsets.all(8.0),
-                          margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                          margin: EdgeInsets.symmetric(
+                              vertical: 4.0, horizontal: 8.0),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10.0),
                             color: Colors.blueGrey,
@@ -84,7 +86,8 @@ class _ChatScreenUserState extends State<ChatScreenUser> {
                       children: [
                         Container(
                           padding: EdgeInsets.all(8.0),
-                          margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                          margin: EdgeInsets.symmetric(
+                              vertical: 4.0, horizontal: 8.0),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10.0),
                             color: Colors.blueGrey,
@@ -129,7 +132,8 @@ class _ChatScreenUserState extends State<ChatScreenUser> {
                 IconButton(
                   icon: Icon(Icons.send),
                   onPressed: () {
-                    sendMessage(widget.garageIDVar, messageController.text.toString());
+                    sendMessage(
+                        widget.garageIDVar, messageController.text.toString());
                   },
                 ),
               ],
@@ -141,7 +145,10 @@ class _ChatScreenUserState extends State<ChatScreenUser> {
   }
 
   void fetchGarageName(String garageId) async {
-    DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('mechanicGarage').doc(garageId).get();
+    DocumentSnapshot snapshot = await FirebaseFirestore.instance
+        .collection('mechanicGarage')
+        .doc(garageId)
+        .get();
     if (snapshot.exists) {
       String? garageName = snapshot?['garageName'] as String?;
       if (garageName != null) {
@@ -160,7 +167,8 @@ class _ChatScreenUserState extends State<ChatScreenUser> {
     FirebaseFirestore.instance
         .collection('messages')
         .where('mechanicID', isEqualTo: mechanicID)
-        .where('senderID', isEqualTo: widget.currentUserID) // Filter by user's ID
+        .where('senderID',
+            isEqualTo: widget.currentUserID) // Filter by user's ID
         .orderBy('timestamp', descending: true)
         .snapshots()
         .listen((QuerySnapshot snapshot) {
@@ -181,9 +189,11 @@ class _ChatScreenUserState extends State<ChatScreenUser> {
 
   void sendMessage(String mechanicID, String message) async {
     if (message.isNotEmpty) {
+      String chatID = const Uuid().v1();
       String senderID = widget.currentUserID; // Use the user's ID
       await FirebaseFirestore.instance.collection('messages').add({
         'mechanicID': mechanicID,
+        'chatID': chatID,
         'senderID': senderID,
         'message': message,
         'timestamp': DateTime.now(),

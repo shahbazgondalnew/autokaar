@@ -1,4 +1,3 @@
-
 import 'package:autokaar/mechanicMod/mechanicEditParts.dart';
 import 'package:autokaar/userMod/carDetails.dart';
 import 'package:flutter/material.dart';
@@ -25,8 +24,8 @@ class _PerformAppointmentState extends State<PerformAppointment> {
   }
 
   Future<Map<String, dynamic>> fetchServiceDetails(String serviceId) async {
-
-    final DocumentSnapshot addedServiceSnapshot = await FirebaseFirestore.instance
+    final DocumentSnapshot addedServiceSnapshot = await FirebaseFirestore
+        .instance
         .collection('addedService')
         .doc(widget.garageId)
         .get();
@@ -35,14 +34,15 @@ class _PerformAppointmentState extends State<PerformAppointment> {
       return {}; // Handle the case where addedService data doesn't exist
     }
 
-    final Map<String, dynamic> addedServiceData = addedServiceSnapshot.data()
-    as Map<String, dynamic>;
+    final Map<String, dynamic> addedServiceData =
+        addedServiceSnapshot.data() as Map<String, dynamic>;
 
     final Map<String, dynamic> serviceDetails =
-    addedServiceData['services'][serviceId];
+        addedServiceData['services'][serviceId];
 
     // Fetch service name from 'mechanicService' collection
-    final DocumentSnapshot mechanicServiceSnapshot = await FirebaseFirestore.instance
+    final DocumentSnapshot mechanicServiceSnapshot = await FirebaseFirestore
+        .instance
         .collection('mechanicService')
         .doc(serviceId)
         .get();
@@ -51,8 +51,8 @@ class _PerformAppointmentState extends State<PerformAppointment> {
       return {}; // Handle the case where mechanicService data doesn't exist
     }
 
-    final Map<String, dynamic> mechanicServiceData = mechanicServiceSnapshot.data()
-    as Map<String, dynamic>;
+    final Map<String, dynamic> mechanicServiceData =
+        mechanicServiceSnapshot.data() as Map<String, dynamic>;
 
     final String serviceName = mechanicServiceData['serviceName'] ?? '';
 
@@ -72,7 +72,7 @@ class _PerformAppointmentState extends State<PerformAppointment> {
     for (final dynamic item in selectedServiceData) {
       final String serviceId = item.toString();
       final Map<String, dynamic> serviceDetails =
-      await fetchServiceDetails(serviceId);
+          await fetchServiceDetails(serviceId);
 
       final int servicePrice = serviceDetails['servicePrice'] ?? 0;
       final int serviceTime = serviceDetails['timeTaken'] ?? 0;
@@ -82,7 +82,6 @@ class _PerformAppointmentState extends State<PerformAppointment> {
     }
 
     setState(() {
-
       totalServicePrice = totalPrice;
       totalServiceTime = totalTime;
     });
@@ -92,7 +91,7 @@ class _PerformAppointmentState extends State<PerformAppointment> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Perform Appointment'),
+        title: Text('Appointment'),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
@@ -152,16 +151,12 @@ class _PerformAppointmentState extends State<PerformAppointment> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CarLogScreenMechanic(carID: widget.appointmentData['carId'], appointmentData: widget.appointmentData, garageID:widget.garageId),
+                    builder: (context) => CarLogScreenMechanic(
+                        carID: widget.appointmentData['carId'],
+                        appointmentData: widget.appointmentData,
+                        garageID: widget.garageId),
                   ),
                 );
-
-
-
-
-
-
-
               },
               style: ElevatedButton.styleFrom(
                 primary: Colors.green, // Change the background color to green
@@ -185,7 +180,6 @@ class _PerformAppointmentState extends State<PerformAppointment> {
                 ],
               ),
             ),
-
           ],
         ),
       ),
@@ -194,20 +188,22 @@ class _PerformAppointmentState extends State<PerformAppointment> {
 
   // Build the list of selected services
   Widget buildSelectedServicesList() {
-    final List<dynamic> selectedServiceData = widget.appointmentData['services'] ?? [];
+    final List<dynamic> selectedServiceData =
+        widget.appointmentData['services'] ?? [];
 
-    final List<Widget> serviceWidgets = selectedServiceData
-        .map((dynamic item) {
+    final List<Widget> serviceWidgets = selectedServiceData.map((dynamic item) {
       final String serviceId = item.toString();
       return FutureBuilder<Map<String, dynamic>>(
         future: fetchServiceDetails(serviceId),
-        builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
+        builder: (BuildContext context,
+            AsyncSnapshot<Map<String, dynamic>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return CircularProgressIndicator();
           }
 
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            print('Service data not found for $serviceId'); // Debugging statement
+            print(
+                'Service data not found for $serviceId'); // Debugging statement
             return Text('Service not found');
           }
 
@@ -230,8 +226,7 @@ class _PerformAppointmentState extends State<PerformAppointment> {
           );
         },
       );
-    })
-        .toList();
+    }).toList();
 
     return Column(
       children: serviceWidgets,

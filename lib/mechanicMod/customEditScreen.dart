@@ -19,7 +19,7 @@ class _EditCustomAutoPartScreenState extends State<EditCustomAutoPartScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Custom Auto Part'),
+        title: Text('Edit Log'),
       ),
       body: StreamBuilder<DocumentSnapshot>(
         stream: FirebaseFirestore.instance
@@ -66,7 +66,8 @@ class _EditCustomAutoPartScreenState extends State<EditCustomAutoPartScreen> {
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelText: 'Enter new reading',
-                    hintText: 'New reading must be greater than current reading',
+                    hintText:
+                        'New reading must be greater than current reading',
                   ),
                 ),
                 SizedBox(height: 20),
@@ -77,7 +78,8 @@ class _EditCustomAutoPartScreenState extends State<EditCustomAutoPartScreen> {
                     if (isInputValid(newReading, convertToInt(currentMeter))) {
                       // Convert new reading to int
                       int newReadingValue = int.parse(newReading);
-                      updateCustomAutoPart(widget.customPartId,newReadingValue);
+                      updateCustomAutoPart(
+                          widget.customPartId, newReadingValue);
 
                       // TODO: Add your database update logic here
                       // You need to update the 'lastChangeReading' field in the Firestore database with the new readingValue
@@ -97,8 +99,6 @@ class _EditCustomAutoPartScreenState extends State<EditCustomAutoPartScreen> {
                               TextButton(
                                 child: Text('OK'),
                                 onPressed: () {
-
-
                                   Navigator.of(context).pop();
                                 },
                               ),
@@ -117,12 +117,15 @@ class _EditCustomAutoPartScreenState extends State<EditCustomAutoPartScreen> {
       ),
     );
   }
+
   void updateCustomAutoPart(String customPartId, int newReadingValue) {
     FirebaseFirestore.instance
         .collection('customLog')
         .doc(customPartId)
-        .update({'customLog':Timestamp.now(),'lastChangeReading': newReadingValue.toString()})
-        .then((_) {
+        .update({
+      'customLog': Timestamp.now(),
+      'lastChangeReading': newReadingValue.toString()
+    }).then((_) {
       print('Custom auto part updated successfully.');
     }).catchError((error) {
       print('Error updating custom auto part: $error');

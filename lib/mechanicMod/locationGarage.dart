@@ -31,7 +31,7 @@ class MapScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Select Location'),
+        title: const Text('Location'),
       ),
       body: GoogleMap(
         initialCameraPosition: initialCameraPosition,

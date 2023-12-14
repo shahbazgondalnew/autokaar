@@ -50,6 +50,7 @@ class _AutopartDetailsScreenState extends State<AutopartDetailsScreen> {
           userCarNames = userCarSnapshot.docs
               .map((doc) => doc['carname'].toString())
               .toList();
+          print('im called');
           print(userCarNames.toString());
         });
       } else {
@@ -126,15 +127,6 @@ class _AutopartDetailsScreenState extends State<AutopartDetailsScreen> {
     }
   }
 
-  List<DropdownMenuItem<String>> buildDropdownItems() {
-    return userCarNames.map((carName) {
-      return DropdownMenuItem<String>(
-        value: carName,
-        child: Text(carName),
-      );
-    }).toList();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -165,21 +157,6 @@ class _AutopartDetailsScreenState extends State<AutopartDetailsScreen> {
                     height: 200.0,
                   ),
                 ),
-              ),
-              DropdownButton<String>(
-                value: selectedCar,
-                hint: Text('Select Car'),
-                onChanged: (value) {
-                  setState(() {
-                    selectedCar = value!;
-                  });
-                },
-                items: userCarNames.map((usercarN) {
-                  return DropdownMenuItem<String>(
-                    value: usercarN,
-                    child: Text(usercarN),
-                  );
-                }).toList(),
               ),
               SizedBox(height: 16.0),
               ListView(
@@ -323,7 +300,8 @@ class _AutopartDetailsScreenState extends State<AutopartDetailsScreen> {
         'garageID': widget.autopart.garageID,
         'status': 'Pending',
         'userID': user?.uid,
-        'averageLife': widget.autopart.averageLife
+        'averageLife': widget.autopart.averageLife,
+        'addtimerun': 45600
       };
 
       // Add the order to the 'autopartOrder' collection

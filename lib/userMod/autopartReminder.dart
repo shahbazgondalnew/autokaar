@@ -66,7 +66,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Reminder Screen'),
+        title: Text('Reminder'),
       ),
       body: SingleChildScrollView(
         child: Padding(

@@ -93,7 +93,7 @@ class _AddMechanicServiceScreenState extends State<AddMechanicServiceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('hell0'),
+        title: Text('Autokaar'),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),

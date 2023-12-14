@@ -47,7 +47,7 @@ class SelectSlotScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Select Time Slot'),
+        title: Text('Select TimeSlot'),
       ),
       body: ListView.builder(
         itemCount: timeSlots.length,

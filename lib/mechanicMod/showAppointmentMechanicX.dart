@@ -11,7 +11,7 @@ class AppointmentListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Booked Appointments'),
+        title: Text('Appointments'),
       ),
       body: AppointmentList(garageId: garageId),
     );

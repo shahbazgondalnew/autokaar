@@ -11,8 +11,10 @@ class SetWorkingHoursScreen extends StatefulWidget {
 }
 
 class _SetWorkingHoursScreenState extends State<SetWorkingHoursScreen> {
-  List<TimeOfDay?> startTimes = List.generate(7, (index) => TimeOfDay(hour: 9, minute: 0));
-  List<TimeOfDay?> endTimes = List.generate(7, (index) => TimeOfDay(hour: 18, minute: 0));
+  List<TimeOfDay?> startTimes =
+      List.generate(7, (index) => TimeOfDay(hour: 9, minute: 0));
+  List<TimeOfDay?> endTimes =
+      List.generate(7, (index) => TimeOfDay(hour: 18, minute: 0));
   List<bool> closedDays = List.generate(7, (index) => false);
 
   @override
@@ -20,7 +22,6 @@ class _SetWorkingHoursScreenState extends State<SetWorkingHoursScreen> {
     super.initState();
     _fetchWorkingHours(); // Load data when the screen is opened
   }
-
 
   Future<void> _fetchWorkingHours() async {
     try {
@@ -41,7 +42,8 @@ class _SetWorkingHoursScreenState extends State<SetWorkingHoursScreen> {
               int endHour = dayData['endHour'];
               int endMinute = dayData['endMinute'];
 
-              startTimes[dayIndex] = TimeOfDay(hour: startHour, minute: startMinute);
+              startTimes[dayIndex] =
+                  TimeOfDay(hour: startHour, minute: startMinute);
               endTimes[dayIndex] = TimeOfDay(hour: endHour, minute: endMinute);
               closedDays[dayIndex] = dayData['closed'];
             }
@@ -52,8 +54,6 @@ class _SetWorkingHoursScreenState extends State<SetWorkingHoursScreen> {
       print('Error fetching working hours: $error');
     }
   }
-
-
 
   Future<void> _selectStartTime(BuildContext context, int dayIndex) async {
     final TimeOfDay? picked = await showTimePicker(
@@ -89,7 +89,7 @@ class _SetWorkingHoursScreenState extends State<SetWorkingHoursScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Set Working Hours'),
+        title: Text('Working Hours'),
       ),
       body: ListView.builder(
         itemCount: 7,
@@ -164,10 +164,16 @@ class _SetWorkingHoursScreenState extends State<SetWorkingHoursScreen> {
     }
   }
 
-
   String _getDayName(int dayIndex) {
-    final days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    final days = [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday'
+    ];
     return days[dayIndex];
   }
 }
-
